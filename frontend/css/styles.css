@@ -1,0 +1,37 @@
+body {
+    font-family: 'Space Grotesk', sans-serif;
+    background-image: radial-gradient(circle at 2px 2px, #2d2d33 1px, transparent 0);
+    background-size: 40px 40px;
+}
+
+.glass-effect {
+    background: rgba(28, 28, 33, 0.8);
+    backdrop-filter: blur(12px);
+}
+
+.glow-green {
+    box-shadow: 0 0 15px rgba(0, 230, 99, 0.2);
+}
+
+/* Smooth transitions */
+* {
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #121214;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2d2d33;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #00e663;
+}
