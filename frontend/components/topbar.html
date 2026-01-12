@@ -1,14 +1,13 @@
 <header class="flex items-center justify-between px-8 py-4 border-b border-border-dark glass-effect sticky top-0 z-10">
     <div class="flex items-center gap-4">
-        <h2 class="text-xl font-bold tracking-tight" id="page-title">System Overview</h2>
+        <h2 class="text-xl font-bold tracking-tight" id="page-title">Fleet Inventory</h2>
+        <div class="relative w-96">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-lg">search</span>
+            <input class="bg-card-dark border-border-dark rounded-full pl-10 pr-4 py-2 text-sm focus:ring-primary focus:border-primary w-full text-white" placeholder="Search by VIN, Model or ID..." type="text" id="search-input"/>
+        </div>
     </div>
     
     <div class="flex items-center gap-6">
-        <div class="relative hidden md:block">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-lg">search</span>
-            <input class="bg-card-dark border-border-dark rounded-full pl-10 pr-4 py-2 text-sm focus:ring-primary focus:border-primary w-64 text-white" placeholder="Search vehicles, OTA tags..." type="text" id="search-input"/>
-        </div>
-        
         <div class="flex items-center gap-2">
             <button class="p-2 rounded-full bg-card-dark border border-border-dark text-slate-400 hover:text-primary transition-all relative" id="notifications-btn">
                 <span class="material-symbols-outlined">notifications</span>
