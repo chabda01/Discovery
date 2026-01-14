@@ -14,7 +14,6 @@ class VehicleService {
 
     this.ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      
       // Mettre à jour les données du véhicule
       this.vehicles.set(data.id, {
         ...data,

@@ -284,7 +284,7 @@ export default {
           break;
 
         case "admin":
-          this.$router.push("/admin/dashboard");
+          this.$router.push({ name: "admin-dashboard" });
           break;
 
         case "client":

@@ -12,20 +12,29 @@ class VehicleSimulator {
     this.id = id;
     this.name = name;
     this.country = country;
-    this.lat = baseLat + (Math.random() - 0.5) * 2; // +/- 100km environ (augmenté de 0.5 à 2)
+    this.lat = baseLat + (Math.random() - 0.5) * 2;
     this.lng = baseLng + (Math.random() - 0.5) * 2;
     this.battery = Math.floor(Math.random() * 100);
     this.speed = 0;
     this.charging = false;
-    this.direction = Math.random() * 360; // Direction en degrés
+    this.direction = Math.random() * 360;
+    this.isConnected = Math.random() > 0.2; // 80% de chance d'être connecté
+    this.firmwareVersion = '1.0.0';
+    this.pendingUpdate = null;
+    this.isUpdating = false;
   }
 
   update() {
+    // Simuler les changements de connexion Internet (5% de chance de changer)
+    if (Math.random() > 0.95) {
+      this.isConnected = !this.isConnected;
+    }
+
     // Simuler le mouvement
-    if (!this.charging) {
+    if (!this.charging && !this.isUpdating) {
       // Changer aléatoirement la vitesse
       if (Math.random() > 0.7) {
-        this.speed = Math.floor(Math.random() * 80); // 0-80 km/h
+        this.speed = Math.floor(Math.random() * 80);
       }
 
       // Si la voiture bouge, déplacer sa position
@@ -57,6 +66,24 @@ class VehicleSimulator {
       }
     }
 
+    // Gérer les mises à jour FOTA
+    if (this.pendingUpdate && !this.isUpdating) {
+      // Conditions pour installer la mise à jour
+      const canUpdate = this.speed === 0 && this.isConnected && this.battery > 20;
+      
+      if (canUpdate) {
+        this.isUpdating = true;
+        this.speed = 0;
+        
+        // Simuler l'installation (10 secondes)
+        setTimeout(() => {
+          this.firmwareVersion = this.pendingUpdate.version;
+          this.pendingUpdate = null;
+          this.isUpdating = false;
+        }, 10000);
+      }
+    }
+
     return this.getData();
   }
 
@@ -70,8 +97,18 @@ class VehicleSimulator {
       battery: Math.round(this.battery * 10) / 10,
       speed: this.speed,
       charging: this.charging,
+      isConnected: this.isConnected,
+      firmwareVersion: this.firmwareVersion,
+      isUpdating: this.isUpdating,
+      pendingUpdate: this.pendingUpdate,
       timestamp: new Date().toISOString()
     };
+  }
+
+  setPendingUpdate(update) {
+    if (this.firmwareVersion !== update.version) {
+      this.pendingUpdate = update;
+    }
   }
 }
 
@@ -135,6 +172,30 @@ wss.on('connection', (ws) => {
   // Envoyer immédiatement l'état actuel de tous les véhicules
   vehicles.forEach(vehicle => {
     ws.send(JSON.stringify(vehicle.getData()));
+  });
+
+  ws.on('message', (message) => {
+    try {
+      const data = JSON.parse(message);
+      
+      // Gérer les commandes FOTA
+      if (data.type === 'FOTA_UPDATE') {
+        console.log(`📦 FOTA Update received: ${data.update.version}`);
+        
+        // Appliquer la mise à jour à tous les véhicules éligibles
+        vehicles.forEach(vehicle => {
+          vehicle.setPendingUpdate(data.update);
+        });
+        
+        // Confirmer la réception
+        ws.send(JSON.stringify({
+          type: 'FOTA_CONFIRMED',
+          message: `Update ${data.update.version} queued for ${vehicles.length} vehicles`
+        }));
+      }
+    } catch (error) {
+      console.error('Error processing message:', error);
+    }
   });
 
   ws.on('close', () => {

@@ -24,10 +24,7 @@
       <div class="space-y-2 text-xs text-slate-300">
         <div class="flex justify-between">
           <span>Battery:</span>
-          <span
-            class="font-bold"
-            :class="getBatteryTextClass(selectedVehicle.battery)"
-          >
+          <span class="font-bold" :class="getBatteryColor(selectedVehicle.battery)">
             {{ selectedVehicle.battery }}%
           </span>
         </div>
@@ -40,11 +37,21 @@
           <span class="font-bold">{{ getVehicleStatus(selectedVehicle) }}</span>
         </div>
         <div class="flex justify-between">
-          <span>Location:</span>
-          <span class="font-mono">
-            {{ selectedVehicle.lat?.toFixed(4) }},
-            {{ selectedVehicle.lng?.toFixed(4) }}
+          <span>Internet:</span>
+          <span class="font-bold flex items-center gap-1" :class="selectedVehicle.isConnected ? 'text-green-500' : 'text-red-500'">
+            <span class="material-symbols-outlined text-xs">
+              {{ selectedVehicle.isConnected ? 'wifi' : 'wifi_off' }}
+            </span>
+            {{ selectedVehicle.isConnected ? 'Connected' : 'Offline' }}
           </span>
+        </div>
+        <div class="flex justify-between">
+          <span>Firmware:</span>
+          <span class="font-mono font-bold">v{{ selectedVehicle.firmwareVersion }}</span>
+        </div>
+        <div class="flex justify-between">
+          <span>Location:</span>
+          <span class="font-mono">{{ selectedVehicle.lat.toFixed(4) }}, {{ selectedVehicle.lng.toFixed(4) }}</span>
         </div>
       </div>
     </div>
