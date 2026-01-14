@@ -169,11 +169,6 @@
           <p class="text-slate-500">Loading vehicle data...</p>
         </div>
       </div>
-
-      <!-- FOOTER -->
-      <footer class="mt-auto p-6 text-xs text-slate-500 border-t border-border-dark">
-        © 2024 VoltaLink Electric
-      </footer>
     </main>
   </div>
 </template>

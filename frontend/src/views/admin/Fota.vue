@@ -159,18 +159,37 @@
                     </span>
                   </td>
                   <td class="py-3">
-                    <span v-if="vehicle.isUpdating" class="text-blue-500 flex items-center gap-2">
-                      <span class="material-symbols-outlined text-sm animate-spin">sync</span>
-                      Installing...
-                    </span>
-                    <span v-else-if="vehicle.pendingUpdate" class="text-yellow-500 flex items-center gap-2">
-                      <span class="material-symbols-outlined text-sm">pending</span>
-                      Pending ({{ vehicle.pendingUpdate.version }})
-                    </span>
-                    <span v-else class="text-green-500 flex items-center gap-2">
-                      <span class="material-symbols-outlined text-sm">check_circle</span>
-                      Up to date
-                    </span>
+                    <div class="flex items-center gap-2">
+                      <span v-if="vehicle.isUpdating" class="text-blue-500 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm animate-spin">sync</span>
+                        Installing...
+                      </span>
+                      <span v-else-if="vehicle.pendingUpdate" class="text-yellow-500 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">pending</span>
+                        Pending ({{ vehicle.pendingUpdate.version }})
+                      </span>
+                      <span v-else class="text-green-500 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm">check_circle</span>
+                        Up to date
+                      </span>
+                      
+                      <!-- Bouton pour démarrer la mise à jour -->
+                      <button
+                        v-if="vehicle.pendingUpdate && !vehicle.isUpdating"
+                        @click="startUpdate(vehicle)"
+                        :disabled="!vehicle.canUpdate"
+                        :class="[
+                          'ml-2 px-3 py-1 rounded-lg text-xs font-medium transition-all flex items-center gap-1',
+                          vehicle.canUpdate
+                            ? 'bg-blue-500 hover:bg-blue-600 text-white'
+                            : 'bg-slate-500/20 text-slate-500 cursor-not-allowed'
+                        ]"
+                        :title="getUpdateTooltip(vehicle)"
+                      >
+                        <span class="material-symbols-outlined text-sm">play_arrow</span>
+                        Install
+                      </button>
+                    </div>
                   </td>
                 </tr>
               </tbody>
@@ -178,11 +197,6 @@
           </div>
         </section>
       </div>
-
-      <!-- FOOTER -->
-      <footer class="mt-auto p-6 text-xs text-slate-500 border-t border-border-dark">
-        © 2024 VoltaLink Electric
-      </footer>
     </main>
 
     <!-- Upload Modal -->
@@ -350,6 +364,31 @@ export default {
       } finally {
         this.isUploading = false;
       }
+    },
+
+    startUpdate(vehicle) {
+      if (!vehicle.canUpdate) {
+        return;
+      }
+
+      const success = vehicleService.startUpdate(vehicle.id);
+      
+      if (!success) {
+        alert('Failed to start update. Please check connection.');
+      }
+    },
+
+    getUpdateTooltip(vehicle) {
+      if (vehicle.canUpdate) {
+        return 'Click to start installation';
+      }
+
+      const reasons = [];
+      if (vehicle.speed > 0) reasons.push('Vehicle must be stopped');
+      if (!vehicle.isConnected) reasons.push('No internet connection');
+      if (vehicle.battery <= 20) reasons.push('Battery too low (needs >20%)');
+
+      return `Cannot update: ${reasons.join(', ')}`;
     },
 
     getVehicleStatusText(vehicle) {

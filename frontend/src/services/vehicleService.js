@@ -57,6 +57,17 @@ class VehicleService {
     return Array.from(this.vehicles.values());
   }
 
+  startUpdate(vehicleId) {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify({
+        type: 'START_UPDATE',
+        vehicleId: vehicleId
+      }));
+      return true;
+    }
+    return false;
+  }
+
   getStats() {
     const vehicles = this.getVehicles();
     const now = new Date();
