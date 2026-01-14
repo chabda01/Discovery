@@ -4,26 +4,41 @@ export default {
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        // Kemet Color Palette
         'kemet': {
-          'primary': '#00A3E0',      // Cyan principal
-          'primary-dark': '#0077B6', // Cyan foncé
-          'primary-light': '#4CC9F0', // Cyan clair
-          'secondary': '#023E8A',     // Bleu profond
-          'accent': '#F72585',        // Rose accent
-          'success': '#06D6A0',       // Vert
-          'warning': '#FFD60A',       // Jaune
-          'danger': '#EF476F',        // Rouge
+          'primary': '#00A3E0',
+          'primary-dark': '#0077B6',
+          'primary-light': '#4CC9F0',
+          'secondary': '#023E8A',
+          'accent': '#F72585',
+          'success': '#06D6A0',
+          'warning': '#FFD60A',
+          'danger': '#EF476F',
         },
         'dark': {
-          'bg': '#0A1929',           // Fond très sombre
-          'card': '#132F4C',         // Carte sombre
-          'border': '#1E3A5F',       // Bordure
-          'hover': '#1A4971',        // Hover
+          'bg': '#0A1929',
+          'card': '#132F4C',
+          'border': '#1E3A5F',
+          'hover': '#1A4971',
         },
+        'light': {
+          'bg': '#F0F4F8',
+          'card': '#FFFFFF',
+          'text': '#0A1929',
+        },
+        // Aliases pour compatibilité
+        'background-dark': '#0A1929',
+        'background-light': '#F0F4F8',
+        'card-dark': '#132F4C',
+        'border-dark': '#1E3A5F',
+        'charcoal-dark': '#1a1a1a',
+        'charcoal-medium': '#2a2a2a',
+        'charcoal-light': '#3a3a3a',
+        'primary': '#00A3E0',
+        'premium-gray': '#e5e7eb',
       },
       backgroundImage: {
         'gradient-kemet': 'linear-gradient(135deg, #00A3E0 0%, #023E8A 100%)',
@@ -37,6 +52,8 @@ export default {
         'elevation-1': '0 2px 8px rgba(0, 0, 0, 0.3), 0 0 1px rgba(255, 255, 255, 0.1)',
         'elevation-2': '0 4px 16px rgba(0, 0, 0, 0.4), 0 0 2px rgba(255, 255, 255, 0.1)',
         'elevation-3': '0 8px 32px rgba(0, 0, 0, 0.5), 0 0 4px rgba(255, 255, 255, 0.1)',
+        'kemet': '0 4px 20px rgba(0, 163, 224, 0.15)',
+        'kemet-lg': '0 10px 40px rgba(0, 163, 224, 0.2)',
       },
       backdropBlur: {
         'xs': '2px',

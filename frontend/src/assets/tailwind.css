@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* * {
+    @apply border-border;
+  } */
+  body {
+    @apply bg-dark-bg text-slate-100;
+  }
+}
+
+@layer components {
+  .kemet-shell {
+    @apply min-h-screen bg-dark-bg bg-gradient-mesh;
+  }
+
+  .kemet-card {
+    @apply bg-dark-card border border-dark-border rounded-2xl shadow-elevation-2;
+  }
+
+  .kemet-card-header {
+    @apply flex items-center justify-between px-6 py-4 border-b border-dark-border bg-white/5;
+  }
+
+  .kemet-link {
+    @apply w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-transparent
+           text-slate-300 hover:text-white hover:bg-dark-hover transition;
+  }
+
+  .kemet-link-active {
+    @apply bg-kemet-primary/10 text-kemet-primary border-kemet-primary/30 shadow-glow-sm;
+  }
+
+  .kemet-badge {
+    @apply inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold
+           bg-white/5 border border-dark-border;
+  }
+
+  .kemet-btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl
+           bg-gradient-kemet text-white font-semibold shadow-glow-sm hover:shadow-glow transition;
+  }
+
+  .kemet-input {
+    @apply w-full bg-dark-card border border-dark-border rounded-xl px-4 py-2
+           text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2
+           focus:ring-kemet-primary/40;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
