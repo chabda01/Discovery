@@ -1,8 +1,3 @@
-// ============================================
-// FICHIER: routes/index.js
-// Description: Exporte toutes les routes
-// ============================================
-
 function createRoutes(db) {
   return {
     auth: createAuthRoutes(db),
@@ -13,5 +8,3 @@ function createRoutes(db) {
     stats: createStatsRoutes(db)
   };
 }
-
-module.exports = createRoutes;

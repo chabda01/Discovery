@@ -1,7 +1,11 @@
-/ ============================================
+const express = require('express');
+const { schemas, validate } = require('../models/models');
+const { authenticateToken } = require('../middleware/auth');
+const DatabaseAdapter = require('../models/adapters');
+
+// ============================================
 // FICHIER: routes/feature.routes.js
 // ============================================
-
 function createFeatureRoutes(db) {
   const router = express.Router();
   const adapter = new DatabaseAdapter(db);
@@ -74,3 +78,5 @@ function createFeatureRoutes(db) {
 
   return router;
 }
+
+module.exports = createFeatureRoutes;

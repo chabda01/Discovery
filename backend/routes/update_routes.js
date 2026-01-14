@@ -1,6 +1,7 @@
-// ============================================
-// FICHIER: routes/update.routes.js
-// ============================================
+const express = require('express');
+const { schemas, validate } = require('../models/models');
+const { authenticateToken } = require('../middleware/auth');
+const DatabaseAdapter = require('../models/adapters');
 
 function createUpdateRoutes(db) {
   const router = express.Router();
@@ -100,3 +101,5 @@ function createUpdateRoutes(db) {
 
   return router;
 }
+
+module.exports = createUpdateRoutes;

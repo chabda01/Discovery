@@ -1,6 +1,4 @@
-// ============================================
-// FICHIER: routes/stats.routes.js
-// ============================================
+
 
 function createStatsRoutes(db) {
   const router = express.Router();

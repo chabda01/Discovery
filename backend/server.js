@@ -1,8 +1,3 @@
-/ ============================================
-// FICHIER 6/6 - SERVER PRINCIPAL
-// Nom du fichier: server.js
-// ============================================
-
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');

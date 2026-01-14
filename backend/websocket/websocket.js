@@ -1,8 +1,3 @@
-// ============================================
-// FICHIER 4/6 - WEBSOCKET HANDLER
-// Nom du fichier: websocket/websocket.js
-// ============================================
-
 const DatabaseAdapter = require('../models/adapters');
 
 class WebSocketManager {

@@ -4,9 +4,6 @@ const { schemas, validate } = require('../models/models');
 const { createToken, authenticateToken } = require('../middleware/auth');
 const DatabaseAdapter = require('../models/adapters');
 
-// ============================================
-// FICHIER: routes/auth.routes.js
-// ============================================
 
 function createAuthRoutes(db) {
   const router = express.Router();
@@ -45,3 +42,5 @@ function createAuthRoutes(db) {
 
   return router;
 }
+
+module.exports = createAuthRoutes;

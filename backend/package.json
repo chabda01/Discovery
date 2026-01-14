@@ -1,0 +1,13 @@
+{
+  "name": "voltalink-backend",
+  "version": "1.0.0",
+  "description": "VoltaLink Backend & Car Simulator",
+  "main": "index.js",
+  "scripts": {
+    "simulator": "node simulator/carSimulator.js",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "ws": "^8.14.2"
+  }
+}
