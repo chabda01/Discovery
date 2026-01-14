@@ -5,11 +5,15 @@ import DashboardAdmin from "../views/admin/Dashboard.vue";
 import Fleet from "../views/admin/Fleet.vue";
 import FleetDetails from "../views/admin/FleetDetail.vue";
 import Fota from "../views/admin/Fota.vue";
-// import Features from "../views/Features.vue";
+import Features from "../views/admin/Features.vue";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
+    {
+      path: "/",
+      component: () => import("../views/login.vue"),
+    },
     {
       path: "/admin",
       component: AdminLayout, // 👈 LE LAYOUT
@@ -34,11 +38,11 @@ const router = createRouter({
           name: "fota",
           component: Fota,
         },
-        // {
-        //   path: "features",
-        //   name: "features",
-        //   component: Features,
-        // },
+        {
+          path: "features",
+          name: "features",
+          component: Features,
+        },
       ],
     },
   ],

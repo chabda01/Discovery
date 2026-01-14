@@ -47,7 +47,7 @@
       </RouterLink>
 
       <RouterLink
-        to="/features"
+        :to="{ name: 'features' }"
         :class="linkClass('/features')"
         class="w-full flex items-center gap-3 px-4 py-3 rounded-xl border text-left"
       >
