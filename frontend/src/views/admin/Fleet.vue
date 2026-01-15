@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-screen overflow-hidden bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
+  <div class="flex overflow-hidden bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
     <main class="flex-1 flex flex-col overflow-y-auto">
       <!-- TOP BAR -->
       <header class="flex items-center justify-between px-8 py-4 border-b border-border-dark sticky top-0 bg-card-dark">

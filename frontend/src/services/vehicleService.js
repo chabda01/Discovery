@@ -7,13 +7,20 @@ class VehicleService {
 
   connect(simulatorUrl = 'ws://localhost:8080') {
     if (this.ws) {
+      console.log('WebSocket already connected');
       return;
     }
 
+    console.log('Connecting to WebSocket:', simulatorUrl);
     this.ws = new WebSocket(simulatorUrl);
+
+    this.ws.onopen = () => {
+      console.log('WebSocket connected successfully');
+    };
 
     this.ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
+      
       // Mettre à jour les données du véhicule
       this.vehicles.set(data.id, {
         ...data,
@@ -45,6 +52,10 @@ class VehicleService {
 
   subscribe(callback) {
     this.listeners.add(callback);
+    // Envoyer immédiatement les données actuelles
+    if (this.vehicles.size > 0) {
+      callback(this.getVehicles());
+    }
     return () => this.listeners.delete(callback);
   }
 
@@ -59,12 +70,14 @@ class VehicleService {
 
   startUpdate(vehicleId) {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      console.log('Sending START_UPDATE for vehicle:', vehicleId);
       this.ws.send(JSON.stringify({
         type: 'START_UPDATE',
         vehicleId: vehicleId
       }));
       return true;
     }
+    console.error('WebSocket not connected');
     return false;
   }
 

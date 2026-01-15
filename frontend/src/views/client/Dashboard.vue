@@ -1,221 +1,558 @@
 <template>
-  <div class="bg-background-light dark:bg-background-dark min-h-screen text-slate-900 dark:text-white">
-    <main class="max-w-[900px] mx-auto px-6 py-8 space-y-6">
+  <div class="flex overflow-hidden bg-dark-bg text-white relative">
+    <div class="absolute inset-0 bg-gradient-mesh opacity-20"></div>
 
-      <div class="flex items-center justify-between">
-        <div>
-          <h1 class="text-2xl font-bold">Vehicle Details</h1>
-          <p class="text-slate-400 text-sm mt-1">Seules les informations du véhicule sélectionné sont affichées.</p>
-        </div>
-
-        <div class="flex items-center gap-3">
-          <select v-model="selectedVehicleId" class="px-3 py-2 bg-background-dark border border-border-dark rounded-md text-white">
-            <option v-if="vehicles.length === 0" disabled>-- Aucun véhicule connecté --</option>
-            <option v-for="v in vehicles" :value="v.id" :key="v.id">{{ v.name || ('Véhicule ' + v.id) }}</option>
-          </select>
-          <button @click="refresh" class="px-3 py-2 bg-primary text-white rounded-md">Refresh</button>
-        </div>
-      </div>
-
-      <div v-if="!selectedVehicle" class="p-6 bg-card-dark rounded-2xl border border-border-dark text-center">
-        <p class="text-slate-400">Sélectionne un véhicule pour afficher ses informations.</p>
-      </div>
-
-      <div v-else class="grid md:grid-cols-2 gap-6">
-        <!-- Left: Map -->
-        <div>
-          <div class="p-4 bg-card-dark rounded-2xl border border-border-dark mb-4">
-            <h2 class="text-lg font-semibold text-white">{{ selectedVehicle.name || ('Véhicule ' + selectedVehicle.id) }}</h2>
-            <p class="text-slate-400 text-sm">Dernière mise à jour : {{ formatTime(selectedVehicle.lastUpdate) }}</p>
+    <main class="flex-1 flex flex-col overflow-y-auto relative z-10">
+      <!-- TOP BAR -->
+      <header
+        class="sticky top-0 z-40 flex items-center justify-between px-8 py-4 bg-dark-card/30 backdrop-blur-xl shadow-elevation-1"
+      >
+        <div class="flex items-center gap-4">
+          <div>
+            <h1 class="text-3xl font-bold text-white">
+              {{ vehicle?.name || "My Vehicle" }}
+            </h1>
+            <div class="flex items-center gap-2 mt-1">
+              <div
+                class="w-2 h-2 bg-kemet-success rounded-full animate-pulse"
+              ></div>
+              <span class="text-xs text-slate-400 uppercase tracking-wider"
+                >Last synced: {{ formatLastSync(vehicle?.lastUpdate) }}</span
+              >
+            </div>
           </div>
-
-          <div id="map" class="h-72 rounded-2xl overflow-hidden border border-border-dark"></div>
-
-          <div class="mt-3 p-3 bg-background-dark rounded-lg border border-border-dark text-sm text-slate-300">
-            <div>Position: <strong class="text-white">{{ coords }}</strong></div>
-            <div>Adresse: <span class="text-slate-400">—</span> <!-- placeholder for future reverse geocoding --></div>
-          </div>
+          <span
+            v-if="vehicle?.isConnected"
+            class="ml-4 px-3 py-1 bg-kemet-success/20 text-kemet-success rounded-full text-xs font-bold uppercase"
+            >Active</span
+          >
         </div>
 
-        <!-- Right: Stats -->
-        <div class="space-y-4">
-          <div class="p-6 bg-card-dark rounded-2xl border border-border-dark">
-            <p class="text-slate-400">Battery</p>
-            <div class="flex items-center justify-between mt-3">
-              <div>
-                <p class="text-4xl font-bold text-white">{{ selectedVehicle.battery_level }}%</p>
-                <p class="text-sm text-slate-400 mt-1">Est. range: {{ estimatedRange }} km</p>
+        <button
+          @click="toggleVehicleSelector"
+          class="px-5 py-2.5 bg-dark-card/80 backdrop-blur-md hover:bg-dark-hover rounded-xl font-semibold transition-all duration-300 flex items-center gap-2 shadow-elevation-2"
+        >
+          <span class="material-symbols-outlined">swap_horiz</span>
+          Switch Vehicle
+        </button>
+      </header>
+
+      <!-- CONTENT -->
+      <div v-if="vehicle" class="p-8 space-y-8">
+        <!-- MAIN GRID -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <!-- LEFT: Vehicle Visual -->
+          <div class="lg:col-span-2 space-y-6">
+            <!-- Vehicle Image Card -->
+            <div
+              class="relative bg-dark-card/40 backdrop-blur-md rounded-3xl shadow-elevation-3 overflow-hidden group"
+            >
+              <div
+                class="absolute top-4 left-4 z-10 px-4 py-2 bg-kemet-success/20 backdrop-blur-sm rounded-xl border border-kemet-success/30"
+              >
+                <div class="flex items-center gap-2">
+                  <div
+                    class="w-2 h-2 bg-kemet-success rounded-full animate-pulse"
+                  ></div>
+                  <span
+                    class="text-xs font-bold text-kemet-success uppercase tracking-wider"
+                    >Live Connection</span
+                  >
+                </div>
               </div>
-              <div class="w-20 h-20 bg-gradient-kemet rounded-full flex items-center justify-center shadow-glow">
-                <span class="text-white font-bold">{{ batteryIcon }}</span>
+
+              <!-- Vehicle 3D/Image -->
+              <div
+                class="relative h-[500px] flex items-center justify-center bg-gradient-to-br from-dark-card via-dark-hover to-dark-card"
+              >
+                <img
+                  src="../../assets/RENDER-4-scaled.png"
+                  alt="Vehicle"
+                />
+              </div>
+            </div>
+
+            <!-- Quick Stats Grid -->
+            <div class="grid grid-cols-3 gap-4">
+              <!-- Battery Level -->
+              <div
+                class="relative bg-dark-card/40 backdrop-blur-md p-6 rounded-2xl shadow-elevation-2 overflow-hidden group"
+              >
+                <div
+                  class="absolute top-0 right-0 w-24 h-24 bg-kemet-success/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"
+                ></div>
+                <div class="relative">
+                  <div class="flex items-center gap-2 mb-3">
+                    <span class="material-symbols-outlined text-kemet-success"
+                      >battery_charging_full</span
+                    >
+                    <span
+                      class="text-xs text-slate-400 uppercase tracking-wider font-medium"
+                      >Battery Level</span
+                    >
+                  </div>
+                  <p
+                    class="text-5xl font-bold"
+                    :class="getBatteryColor(vehicle.battery)"
+                  >
+                    {{ vehicle.battery }}%
+                  </p>
+                  <div
+                    class="mt-3 h-2 bg-dark-bg/50 rounded-full overflow-hidden"
+                  >
+                    <div
+                      :class="[
+                        'h-2 rounded-full transition-all duration-500',
+                        getBatteryBarClass(vehicle.battery),
+                      ]"
+                      :style="{ width: vehicle.battery + '%' }"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Range -->
+              <div
+                class="relative bg-dark-card/40 backdrop-blur-md p-6 rounded-2xl shadow-elevation-2 overflow-hidden group"
+              >
+                <div
+                  class="absolute top-0 right-0 w-24 h-24 bg-kemet-primary/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"
+                ></div>
+                <div class="relative">
+                  <div class="flex items-center gap-2 mb-3">
+                    <span class="material-symbols-outlined text-kemet-primary"
+                      >electric_bolt</span
+                    >
+                    <span
+                      class="text-xs text-slate-400 uppercase tracking-wider font-medium"
+                      >Est. Range</span
+                    >
+                  </div>
+                  <p class="text-5xl font-bold text-white">
+                    {{ Math.round(vehicle.battery * 4) }}
+                  </p>
+                  <p class="text-sm text-slate-400 mt-1">km</p>
+                  <p
+                    class="text-xs text-kemet-primary mt-2 font-semibold uppercase"
+                  >
+                    Peak Efficiency
+                  </p>
+                </div>
+              </div>
+
+              <!-- Status -->
+              <div
+                class="relative bg-dark-card/40 backdrop-blur-md p-6 rounded-2xl shadow-elevation-2 overflow-hidden group"
+              >
+                <div
+                  class="absolute top-0 right-0 w-24 h-24 bg-blue-400/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"
+                ></div>
+                <div class="relative">
+                  <div class="flex items-center gap-2 mb-3">
+                    <span class="material-symbols-outlined text-blue-400"
+                      >wifi</span
+                    >
+                    <span
+                      class="text-xs text-slate-400 uppercase tracking-wider font-medium"
+                      >Status</span
+                    >
+                  </div>
+                  <p class="text-3xl font-bold text-white mb-2">
+                    {{ getStatusText(vehicle) }}
+                  </p>
+                  <p
+                    class="text-sm font-medium"
+                    :class="
+                      vehicle.isConnected
+                        ? 'text-kemet-success'
+                        : 'text-kemet-danger'
+                    "
+                  >
+                    Signal:
+                    <span class="uppercase">{{
+                      vehicle.isConnected ? "Excellent" : "Offline"
+                    }}</span>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="p-6 bg-card-dark rounded-2xl border border-border-dark">
-            <p class="text-slate-400">Stats</p>
-            <div class="grid grid-cols-2 gap-3 mt-3">
-              <div class="p-3 bg-background-dark rounded-lg text-white">
-                <p class="text-xs text-slate-400">Speed</p>
-                <p class="text-lg font-bold">{{ selectedVehicle.speed || 0 }} km/h</p>
+          <!-- RIGHT: Actions & Info -->
+          <div class="space-y-6">
+            <!-- Locate Vehicle Card -->
+            <!-- <button
+              @click="locateOnMap"
+              class="w-full group relative bg-gradient-kemet hover:shadow-glow-lg rounded-2xl p-6 transition-all duration-300 overflow-hidden"
+            >
+              <div
+                class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"
+              ></div>
+              <div class="relative flex items-center justify-between">
+                <div class="text-left">
+                  <span class="material-symbols-outlined text-4xl mb-2"
+                    >location_on</span
+                  >
+                  <h3 class="text-xl font-bold">Locate Vehicle</h3>
+                  <p class="text-sm opacity-80 mt-1">View on map</p>
+                </div>
+                <span
+                  class="material-symbols-outlined text-3xl group-hover:translate-x-1 transition-transform"
+                  >arrow_forward</span
+                >
               </div>
-              <div class="p-3 bg-background-dark rounded-lg text-white">
-                <p class="text-xs text-slate-400">Status</p>
-                <p class="text-lg font-bold">{{ selectedVehicle.is_updating ? 'Updating' : 'Idle' }}</p>
-              </div>
-              <div class="p-3 bg-background-dark rounded-lg text-white">
-                <p class="text-xs text-slate-400">Firmware</p>
-                <p class="text-lg font-bold">{{ selectedVehicle.current_firmware_version || '—' }}</p>
-              </div>
-              <div class="p-3 bg-background-dark rounded-lg text-white">
-                <p class="text-xs text-slate-400">Last seen</p>
-                <p class="text-lg font-bold">{{ timeAgo(selectedVehicle.lastUpdate) }}</p>
+            </button> -->
+
+            <!-- Quick Actions -->
+            <div
+              class="bg-dark-card/40 backdrop-blur-md rounded-2xl shadow-elevation-2 p-6"
+            >
+              <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-kemet-primary"
+                  >lock</span
+                >
+                Quick Actions
+              </h3>
+              <div class="grid grid-cols-2 gap-3">
+                <button
+                  class="p-4 bg-dark-bg/50 hover:bg-dark-hover rounded-xl transition-all group"
+                >
+                  <span
+                    class="material-symbols-outlined text-2xl text-kemet-success group-hover:scale-110 transition-transform"
+                    >lock_open</span
+                  >
+                  <p class="text-xs mt-2 font-medium">Unlock</p>
+                </button>
+                <button
+                  class="p-4 bg-dark-bg/50 hover:bg-dark-hover rounded-xl transition-all group"
+                >
+                  <span
+                    class="material-symbols-outlined text-2xl text-slate-400 group-hover:scale-110 transition-transform"
+                    >bar_chart</span
+                  >
+                  <p class="text-xs mt-2 font-medium">View Stats</p>
+                </button>
               </div>
             </div>
 
-            <div class="flex gap-3 mt-4">
-              <button @click="locateOnMap" class="px-4 py-2 bg-primary text-white rounded-md">Locate</button>
-              <button @click="copyCoords" class="px-4 py-2 bg-background-dark text-white rounded-md">Copy coords</button>
-            </div>
+            <!-- Vehicle Health -->
+            <div
+              class="bg-dark-card/40 backdrop-blur-md rounded-2xl shadow-elevation-2 p-6"
+            >
+              <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-kemet-success"
+                  >favorite</span
+                >
+                Vehicle Health
+              </h3>
 
-            <div v-if="message" class="mt-3 p-2 rounded-md bg-green-500 text-white">{{ message }}</div>
+              <div class="space-y-3">
+                <div
+                  class="flex items-center justify-between p-3 bg-dark-bg/30 rounded-xl"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-kemet-success"
+                      >check_circle</span
+                    >
+                    <span class="text-sm">Battery Health</span>
+                  </div>
+                  <span class="text-kemet-success font-bold"
+                    >{{ vehicle.battery }}%</span
+                  >
+                </div>
+
+                <div
+                  class="flex items-center justify-between p-3 bg-dark-bg/30 rounded-xl"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-kemet-success"
+                      >thermostat</span
+                    >
+                    <span class="text-sm">Motor Temp</span>
+                  </div>
+                  <span class="text-white font-bold">42°C</span>
+                </div>
+
+                <div
+                  class="flex items-center justify-between p-3 bg-dark-bg/30 rounded-xl"
+                >
+                  <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-kemet-success"
+                      >speed</span
+                    >
+                    <span class="text-sm">Tire Pressure</span>
+                  </div>
+                  <span class="text-white font-bold">32 PSI</span>
+                </div>
+              </div>
+
+              <p class="text-xs text-slate-500 mt-4 uppercase tracking-wider">
+                Optimal Charging Condition
+              </p>
+            </div>
           </div>
+        </div>
+
+        <!-- MAP SECTION -->
+        <div class="h-[500px] xl:h-[560px]">
+          <LiveMap :vehicles="mapVehicles" />
         </div>
       </div>
 
+      <!-- NO VEHICLE SELECTED -->
+      <div v-else class="flex-1 flex items-center justify-center">
+        <div class="text-center">
+          <span class="material-symbols-outlined text-6xl text-slate-600 mb-4"
+            >directions_car_filled</span
+          >
+          <p class="text-slate-500 mb-4">No vehicle selected</p>
+          <button
+            @click="toggleVehicleSelector"
+            class="px-6 py-3 bg-gradient-kemet text-white rounded-xl font-semibold"
+          >
+            Select Vehicle
+          </button>
+        </div>
+      </div>
     </main>
+
+    <!-- VEHICLE SELECTOR MODAL -->
+    <div
+      v-if="showVehicleSelector"
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+      @click.self="toggleVehicleSelector"
+    >
+      <div
+        class="bg-dark-card/90 backdrop-blur-xl rounded-2xl shadow-elevation-3 p-8 max-w-md w-full mx-4"
+      >
+        <h3 class="text-2xl font-bold text-white mb-6">Select Your Vehicle</h3>
+        <div class="space-y-3">
+          <button
+            v-for="v in vehicles"
+            :key="v.id"
+            @click="selectVehicle(v.id)"
+            :class="[
+              'w-full p-4 rounded-xl transition-all duration-300 flex items-center justify-between',
+              selectedVehicleId === v.id
+                ? 'bg-gradient-kemet shadow-glow'
+                : 'bg-dark-hover hover:bg-dark-border',
+            ]"
+          >
+            <div class="text-left">
+              <p class="font-bold text-white">
+                {{ v.name || `Vehicle ${v.id}` }}
+              </p>
+              <p class="text-xs text-slate-400">{{ v.country }}</p>
+            </div>
+            <span
+              v-if="selectedVehicleId === v.id"
+              class="material-symbols-outlined text-white"
+              >check_circle</span
+            >
+          </button>
+        </div>
+        <button
+          @click="toggleVehicleSelector"
+          class="w-full mt-6 px-6 py-3 bg-dark-hover hover:bg-dark-border text-white rounded-xl font-semibold transition-all"
+        >
+          Close
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
-<script setup>
-import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue';
-import vehicleService from '../../services/vehicleService.js';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+<script>
+import LiveMap from '../../components/LiveMap.vue';
+import vehicleService from "../../services/vehicleService";
 
-const vehicles = ref([]);
-const selectedVehicleId = ref(null);
-const selectedVehicle = ref(null);
-const message = ref('');
-let unsubscribe = null;
-let map = null;
-let marker = null;
+export default {
+  name: "ClientDashboard",
+  components: {
+    LiveMap,
+  },
+  data() {
+    return {
+      vehicles: [],
+      selectedVehicleId: null,
+      vehicle: null,
+      unsubscribe: null,
+      map: null,
+      marker: null,
+      showVehicleSelector: false,
+      mapEl: null,
+    };
+  },
 
-function formatTime(t) {
-  if (!t) return '—';
-  const d = new Date(t);
-  return d.toLocaleString();
-}
+  computed: {
+    mapVehicles() {
+      if (!this.vehicle) return [];
+      const lat = Number(this.vehicle.lat);
+      const lng = Number(this.vehicle.lng);
 
-function timeAgo(t) {
-  if (!t) return '—';
-  const diff = Date.now() - new Date(t).getTime();
-  const s = Math.floor(diff / 1000);
-  if (s < 60) return `${s}s`; 
-  const m = Math.floor(s / 60);
-  if (m < 60) return `${m}m`;
-  const h = Math.floor(m / 60);
-  return `${h}h`;
-}
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return [];
 
-function updateFromVehicles(arr) {
-  // Normalize vehicle objects
-  vehicles.value = arr.map(v => ({
-    id: v.id || v.vehicle_id || v.vehicleId,
-    name: v.name,
-    battery_level: v.battery_level ?? v.battery ?? v.batteryLevel ?? 0,
-    location: v.location || v.coords || { lat: 0, lng: 0 },
-    speed: v.speed ?? 0,
-    lastUpdate: v.lastUpdate || v.timestamp || new Date().toISOString(),
-    is_updating: v.is_updating ?? v.isUpdating ?? false,
-    current_firmware_version: v.current_firmware_version || v.firmwareVersion || null
-  }));
+      return [
+        {
+          ...this.vehicle,
+          lat,
+          lng,
+        },
+      ];
+    },
 
-  if (!selectedVehicleId.value && vehicles.value.length) selectedVehicleId.value = vehicles.value[0].id;
-}
+    coords() {
+      if (!this.vehicle) return "—";
+      const lat = Number(this.vehicle.lat);
+      const lng = Number(this.vehicle.lng);
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return "—";
+      return `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+    },
+  },
 
-onMounted(() => {
-  vehicleService.connect();
-  vehicles.value = vehicleService.getVehicles();
-  updateFromVehicles(vehicles.value);
+  mounted() {
+    vehicleService.connect("ws://localhost:8080");
 
-  unsubscribe = vehicleService.subscribe(arr => {
-    updateFromVehicles(arr);
-  });
+    this.unsubscribe = vehicleService.subscribe((vehicles) => {
+      this.vehicles = vehicles;
 
-  // init map
-  map = L.map('map', { zoomControl: false, attributionControl: false }).setView([6.37, 2.39], 13);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19
-  }).addTo(map);
-});
+      if (!this.selectedVehicleId && vehicles.length > 0) {
+        this.selectedVehicleId = vehicles[0].id;
+      }
 
-onBeforeUnmount(() => {
-  if (unsubscribe) unsubscribe();
-  if (map) map.remove();
-  vehicleService.disconnect();
-});
+      if (this.selectedVehicleId) {
+        this.vehicle = vehicles.find((v) => v.id === this.selectedVehicleId);
+        this.updateMap();
+      }
+    });
+  },
 
-watch([selectedVehicleId, vehicles], () => {
-  const v = vehicles.value.find(x => x.id === selectedVehicleId.value);
-  selectedVehicle.value = v || null;
-
-  if (selectedVehicle.value && selectedVehicle.value.location) {
-    const lat = selectedVehicle.value.location.lat || selectedVehicle.value.location.latitude || selectedVehicle.value.location[0];
-    const lng = selectedVehicle.value.location.lng || selectedVehicle.value.location.longitude || selectedVehicle.value.location[1];
-
-    if (marker) {
-      marker.setLatLng([lat, lng]);
-    } else {
-      marker = L.marker([lat, lng]).addTo(map);
+  beforeUnmount() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
     }
-    map.setView([lat, lng], 15);
-  }
-});
+    if (this.map) {
+      this.map.remove();
+    }
+  },
 
-function refresh() {
-  vehicles.value = vehicleService.getVehicles();
-  updateFromVehicles(vehicles.value);
-}
+  methods: {
+    toggleVehicleSelector() {
+      this.showVehicleSelector = !this.showVehicleSelector;
+    },
 
-function locateOnMap() {
-  if (!selectedVehicle.value || !selectedVehicle.value.location) return;
-  const lat = selectedVehicle.value.location.lat;
-  const lng = selectedVehicle.value.location.lng;
-  map.setView([lat, lng], 16);
-  if (marker) marker.openPopup();
-}
+    selectVehicle(id) {
+      this.selectedVehicleId = id;
+      this.vehicle = this.vehicles.find((v) => v.id === id);
+      this.showVehicleSelector = false;
+      this.$nextTick(() => {
+        this.initMap();
+      });
+    },
 
-function copyCoords() {
-  if (!selectedVehicle.value || !selectedVehicle.value.location) return;
-  const text = `${selectedVehicle.value.location.lat}, ${selectedVehicle.value.location.lng}`;
-  navigator.clipboard?.writeText(text);
-  message.value = 'Coords copied';
-  setTimeout(() => (message.value = ''), 2000);
-}
+    initMap() {
+      if (!this.$refs.mapEl || !this.vehicle) return;
 
-const coords = computed(() => {
-  if (!selectedVehicle.value || !selectedVehicle.value.location) return '—';
-  return `${selectedVehicle.value.location.lat.toFixed(5)}, ${selectedVehicle.value.location.lng.toFixed(5)}`;
-});
+      const lat = Number(this.vehicle.lat);
+      const lng = Number(this.vehicle.lng);
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
 
-const estimatedRange = computed(() => {
-  if (!selectedVehicle.value) return '—';
-  // approx 3.5 km per % battery
-  return Math.round((selectedVehicle.value.battery_level || 0) * 3.5);
-});
+      // ✅ Si la map existe déjà, juste recentrer + invalider taille
+      if (this.map) {
+        this.map.setView([lat, lng], this.map.getZoom() || 13);
+        if (this.marker) this.marker.setLatLng([lat, lng]);
 
-const batteryIcon = computed(() => {
-  const v = selectedVehicle.value?.battery_level ?? 0;
-  if (v > 75) return '🟢';
-  if (v > 50) return '🟡';
-  if (v > 25) return '🟠';
-  return '🔴';
-});
+        this.$nextTick(() => {
+          requestAnimationFrame(() => this.map.invalidateSize());
+        });
+        return;
+      }
+
+      // ✅ Créer la map une seule fois
+      this.map = L.map(this.$refs.mapEl, {
+        zoomControl: false,
+        attributionControl: true,
+      }).setView([lat, lng], 13);
+
+      L.control.zoom({ position: "bottomright" }).addTo(this.map);
+
+      L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+        {
+          attribution: "© OpenStreetMap contributors © CARTO",
+          maxZoom: 19,
+        }
+      ).addTo(this.map);
+
+      this.marker = L.marker([lat, lng]).addTo(this.map);
+
+      // ✅ IMPORTANT : forcer Leaflet à recalculer la taille après rendu
+      this.$nextTick(() => {
+        requestAnimationFrame(() => this.map.invalidateSize());
+      });
+    },
+
+    updateMap() {
+      if (!this.vehicle) return;
+
+      const lat = Number(this.vehicle.lat);
+      const lng = Number(this.vehicle.lng);
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
+
+      // Si map pas encore créée, on la crée
+      if (!this.map) {
+        this.$nextTick(() => this.initMap());
+        return;
+      }
+
+      if (this.marker) {
+        this.marker.setLatLng([lat, lng]);
+      } else {
+        this.marker = L.marker([lat, lng]).addTo(this.map);
+      }
+
+      // Option : garder le zoom actuel
+      this.map.setView([lat, lng], this.map.getZoom() || 13);
+
+      // ✅ Forcer redraw (utile quand le layout change)
+      this.$nextTick(() => {
+        requestAnimationFrame(() => this.map.invalidateSize());
+      });
+    },
+
+    locateOnMap() {
+      if (this.map && this.vehicle) {
+        this.map.setView([this.vehicle.lat, this.vehicle.lng], 15);
+      }
+    },
+
+    getStatusText(vehicle) {
+      if (vehicle.isUpdating) return "Updating";
+      if (vehicle.charging) return "Charging";
+      if (vehicle.speed > 0) return "Moving";
+      return "Connected";
+    },
+
+    getBatteryColor(battery) {
+      if (battery < 20) return "text-kemet-danger";
+      if (battery < 50) return "text-kemet-warning";
+      return "text-kemet-success";
+    },
+    getBatteryBarClass(battery) {
+      if (battery < 20) return "bg-kemet-danger";
+      if (battery < 50) return "bg-kemet-warning";
+      return "bg-kemet-success";
+    },
+    formatLastSync(date) {
+      if (!date) return "—";
+      const d = new Date(date);
+      const diff = Math.floor((Date.now() - d.getTime()) / 1000);
+      if (diff < 60) return `${diff}s ago`;
+      const m = Math.floor(diff / 60);
+      if (m < 60) return `${m}m ago`;
+      const h = Math.floor(m / 60);
+      return `${h}h ago`;
+    },
+  },
+};
 </script>
-
-<style scoped>
-#map {
-  width: 100%;
-}
-</style>

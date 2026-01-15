@@ -67,7 +67,6 @@ const router = createRouter({
     {
       path: '/client',
       component: () => import('../components/layout/ClientLayout.vue'),
-      meta: { requiresAuth: true, role: 'client' },
       children: [
         {
           path: '',
