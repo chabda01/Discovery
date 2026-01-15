@@ -13,7 +13,19 @@ dist
 dist-ssr
 coverage
 *.local
-
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+.env
+.env.*.local
+.vite
+/build
+/.turbo
+/.next
+/.nuxt
+/out
+/.expo
+/.expo-shared
 /cypress/videos/
 /cypress/screenshots/
 
