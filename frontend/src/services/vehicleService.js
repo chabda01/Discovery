@@ -21,14 +21,22 @@ class VehicleService {
     this.ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       
-      // Mettre à jour les données du véhicule
-      this.vehicles.set(data.id, {
-        ...data,
-        lastUpdate: new Date()
-      });
-
-      // Notifier tous les listeners
-      this.notifyListeners();
+      // Gérer les messages de confirmation
+      if (data.type === 'UPDATE_STARTED') {
+        console.log('Update started for vehicle:', data.vehicleId);
+      } else if (data.type === 'UPDATE_ERROR') {
+        console.error('Update error:', data.error);
+        alert(`Update failed: ${data.error}`);
+      } else {
+        // Mise à jour normale du véhicule
+        this.vehicles.set(data.id, {
+          ...data,
+          lastUpdate: new Date()
+        });
+        
+        // Notifier tous les listeners
+        this.notifyListeners();
+      }
     };
 
     this.ws.onerror = (error) => {

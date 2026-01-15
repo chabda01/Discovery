@@ -380,7 +380,7 @@ export default {
       map: null,
       marker: null,
       showVehicleSelector: false,
-      mapEl: null,
+      mapInitialized: false
     };
   },
 
@@ -443,86 +443,108 @@ export default {
 
     selectVehicle(id) {
       this.selectedVehicleId = id;
-      this.vehicle = this.vehicles.find((v) => v.id === id);
+      this.vehicle = this.vehicles.find(v => v.id === id);
       this.showVehicleSelector = false;
+      
+      // Attendre que le DOM soit mis à jour avant d'initialiser la carte
       this.$nextTick(() => {
-        this.initMap();
+        setTimeout(() => {
+          this.initMap();
+        }, 100);
       });
     },
 
     initMap() {
-      if (!this.$refs.mapEl || !this.vehicle) return;
-
-      const lat = Number(this.vehicle.lat);
-      const lng = Number(this.vehicle.lng);
-      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
-
-      // ✅ Si la map existe déjà, juste recentrer + invalider taille
+      // Si la carte existe déjà, la détruire d'abord
       if (this.map) {
-        this.map.setView([lat, lng], this.map.getZoom() || 13);
-        if (this.marker) this.marker.setLatLng([lat, lng]);
+        this.map.remove();
+        this.map = null;
+        this.marker = null;
+      }
 
+      const mapElement = this.$refs.mapEl;
+      
+      if (!mapElement || !this.vehicle) {
+        console.warn('Map element or vehicle not found');
+        return;
+      }
+
+      try {
+        // Créer la carte
+        this.map = L.map(mapElement, {
+          zoomControl: true,
+          attributionControl: false
+        }).setView([this.vehicle.lat, this.vehicle.lng], 13);
+
+        // Ajouter le tile layer
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+          attribution: '© OpenStreetMap contributors © CARTO',
+          maxZoom: 19
+        }).addTo(this.map);
+
+        // Créer l'icône personnalisée
+        const customIcon = L.divIcon({
+          html: `
+            <div class="relative">
+              <div class="w-8 h-8 bg-gradient-kemet rounded-full shadow-glow-lg flex items-center justify-center">
+                <span class="material-symbols-outlined text-white text-lg">directions_car</span>
+              </div>
+              <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-kemet-primary rounded-full"></div>
+            </div>
+          `,
+          className: 'custom-car-marker',
+          iconSize: [32, 32],
+          iconAnchor: [16, 32]
+        });
+
+        // Ajouter le marker
+        this.marker = L.marker([this.vehicle.lat, this.vehicle.lng], {
+          icon: customIcon
+        }).addTo(this.map);
+
+        // Forcer Leaflet à recalculer la taille
+        setTimeout(() => {
+          if (this.map) {
+            this.map.invalidateSize();
+          }
+        }, 200);
+
+        this.mapInitialized = true;
+        console.log('Map initialized successfully');
+      } catch (error) {
+        console.error('Error initializing map:', error);
+      }
+    },
+
+    updateMap() {
+      if (!this.map || !this.vehicle) {
+        // Si la carte n'existe pas, l'initialiser
         this.$nextTick(() => {
-          requestAnimationFrame(() => this.map.invalidateSize());
+          this.initMap();
         });
         return;
       }
 
-      // ✅ Créer la map une seule fois
-      this.map = L.map(this.$refs.mapEl, {
-        zoomControl: false,
-        attributionControl: true,
-      }).setView([lat, lng], 13);
-
-      L.control.zoom({ position: "bottomright" }).addTo(this.map);
-
-      L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-        {
-          attribution: "© OpenStreetMap contributors © CARTO",
-          maxZoom: 19,
+      try {
+        // Mettre à jour la position du marker
+        if (this.marker) {
+          this.marker.setLatLng([this.vehicle.lat, this.vehicle.lng]);
         }
-      ).addTo(this.map);
-
-      this.marker = L.marker([lat, lng]).addTo(this.map);
-
-      // ✅ IMPORTANT : forcer Leaflet à recalculer la taille après rendu
-      this.$nextTick(() => {
-        requestAnimationFrame(() => this.map.invalidateSize());
-      });
-    },
-
-    updateMap() {
-      if (!this.vehicle) return;
-
-      const lat = Number(this.vehicle.lat);
-      const lng = Number(this.vehicle.lng);
-      if (!Number.isFinite(lat) || !Number.isFinite(lng)) return;
-
-      // Si map pas encore créée, on la crée
-      if (!this.map) {
-        this.$nextTick(() => this.initMap());
-        return;
+        
+        // Centrer la carte sur la nouvelle position (sans zoom)
+        this.map.setView([this.vehicle.lat, this.vehicle.lng], this.map.getZoom());
+      } catch (error) {
+        console.error('Error updating map:', error);
+        // En cas d'erreur, réinitialiser la carte
+        this.initMap();
       }
-
-      if (this.marker) {
-        this.marker.setLatLng([lat, lng]);
-      } else {
-        this.marker = L.marker([lat, lng]).addTo(this.map);
-      }
-
-      // Option : garder le zoom actuel
-      this.map.setView([lat, lng], this.map.getZoom() || 13);
-
-      // ✅ Forcer redraw (utile quand le layout change)
-      this.$nextTick(() => {
-        requestAnimationFrame(() => this.map.invalidateSize());
-      });
     },
 
     locateOnMap() {
       if (this.map && this.vehicle) {
         this.map.setView([this.vehicle.lat, this.vehicle.lng], 15);
+      } else {
+        this.initMap();
       }
     },
 
@@ -554,5 +576,53 @@ export default {
       return `${h}h ago`;
     },
   },
+
+  watch: {
+    vehicle: {
+      handler(newVehicle) {
+        if (newVehicle && this.mapInitialized) {
+          this.updateMap();
+        } else if (newVehicle && !this.mapInitialized) {
+          this.$nextTick(() => {
+            this.initMap();
+          });
+        }
+      },
+      deep: true
+    }
+  }
 };
 </script>
+
+<style scoped>
+#map {
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+}
+
+:deep(.custom-car-marker) {
+  background: none !important;
+  border: none !important;
+}
+
+:deep(.leaflet-container) {
+  background: #132F4C;
+  font-family: inherit;
+}
+
+:deep(.leaflet-control-zoom) {
+  border: none !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+:deep(.leaflet-control-zoom a) {
+  background: #132F4C !important;
+  color: white !important;
+  border: 1px solid #1E3A5F !important;
+}
+
+:deep(.leaflet-control-zoom a:hover) {
+  background: #1A4971 !important;
+}
+</style>
