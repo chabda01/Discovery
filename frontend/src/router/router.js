@@ -6,6 +6,8 @@ import Fleet from "../views/admin/Fleet.vue";
 import FleetDetails from "../views/admin/FleetDetail.vue";
 import Fota from "../views/admin/Fota.vue";
 import Features from "../views/admin/Features.vue";
+import SuperAdminDashboard from "../views/super-admin/Dashboard.vue";
+import Admins from "../views/super-admin/Admins.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -13,6 +15,21 @@ const router = createRouter({
     {
       path: "/",
       component: () => import("../views/login.vue"),
+    },
+    {
+      path: "/super-admin",
+      children: [
+        {
+          path: "",
+          name: "super-admin-dashboard",
+          component: SuperAdminDashboard,
+        },
+        {
+          path: "admins",
+          name: "manage-admins",
+          component: Admins,
+        }
+      ],
     },
     {
       path: "/admin",
