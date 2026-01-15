@@ -76,6 +76,32 @@ class VehicleService {
     return Array.from(this.vehicles.values());
   }
 
+  activateFeature(vehicleId, featureId) {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      console.log('Activating feature:', featureId, 'on vehicle:', vehicleId);
+      this.ws.send(JSON.stringify({
+        type: 'ACTIVATE_FEATURE',
+        vehicleId: vehicleId,
+        featureId: featureId
+      }));
+      return true;
+    }
+    console.error('WebSocket not connected');
+    return false;
+  }
+
+  deactivateFeature(vehicleId, featureId) {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify({
+        type: 'DEACTIVATE_FEATURE',
+        vehicleId: vehicleId,
+        featureId: featureId
+      }));
+      return true;
+    }
+    return false;
+  }
+
   startUpdate(vehicleId) {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       console.log('Sending START_UPDATE for vehicle:', vehicleId);

@@ -18,10 +18,12 @@ class VehicleSimulator {
     this.speed = 0;
     this.charging = false;
     this.direction = Math.random() * 360;
-    this.isConnected = Math.random() > 0.2; // 80% de chance d'être connecté
+    this.isConnected = Math.random() > 0.2;
     this.firmwareVersion = '1.0.0';
     this.pendingUpdate = null;
     this.isUpdating = false;
+    this.activeFeatures = []; // IDs des features actives
+    this.drivingMode = 'manual'; // manual, autopilot, full-self-driving
   }
 
   update() {
@@ -90,6 +92,8 @@ class VehicleSimulator {
       isUpdating: this.isUpdating,
       pendingUpdate: this.pendingUpdate,
       canUpdate: this.canUpdate(),
+      activeFeatures: this.activeFeatures,
+      drivingMode: this.drivingMode,
       timestamp: new Date().toISOString()
     };
   }
@@ -134,6 +138,41 @@ class VehicleSimulator {
     }, 10000);
 
     return { success: true, message: 'Update started' };
+  }
+
+  activateFeature(featureId) {
+    const featureIdNum = Number(featureId);
+    
+    if (!this.activeFeatures.includes(featureIdNum)) {
+      this.activeFeatures.push(featureIdNum);
+      
+      console.log(`✅ Vehicle ${this.id}: Feature ${featureIdNum} activated. Active features:`, this.activeFeatures);
+      
+      // Activer les modes de conduite selon la feature
+      if (featureIdNum === 1) { // Autopilot
+        this.drivingMode = 'autopilot';
+      } else if (featureIdNum === 2) { // Full Self-Driving
+        this.drivingMode = 'full-self-driving';
+      }
+      
+      return { success: true, message: 'Feature activated successfully' };
+    }
+    return { success: false, error: 'Feature already active' };
+  }
+
+  deactivateFeature(featureId) {
+    const index = this.activeFeatures.indexOf(featureId);
+    if (index > -1) {
+      this.activeFeatures.splice(index, 1);
+      
+      // Désactiver le mode de conduite
+      if (featureId === 1 || featureId === 2) {
+        this.drivingMode = 'manual';
+      }
+      
+      return { success: true, message: 'Feature deactivated' };
+    }
+    return { success: false, error: 'Feature not active' };
   }
 }
 
@@ -244,6 +283,68 @@ wss.on('connection', (ws) => {
         setTimeout(() => {
           ws.send(JSON.stringify(vehicle.getData()));
         }, 100);
+      }
+
+      // Gérer l'activation de feature
+      if (data.type === 'ACTIVATE_FEATURE') {
+        const vehicleId = Number(data.vehicleId);
+        const vehicle = vehicles.find(v => v.id === vehicleId);
+        
+        console.log(`📦 Received ACTIVATE_FEATURE for vehicle ${vehicleId}, feature ${data.featureId}`);
+        
+        if (!vehicle) {
+          console.error(`❌ Vehicle ${vehicleId} not found`);
+          ws.send(JSON.stringify({
+            type: 'FEATURE_ERROR',
+            vehicleId: data.vehicleId,
+            error: 'Vehicle not found'
+          }));
+          return;
+        }
+
+        const result = vehicle.activateFeature(data.featureId);
+        
+        console.log(`Result for vehicle ${vehicleId}:`, result);
+        
+        ws.send(JSON.stringify({
+          type: result.success ? 'FEATURE_ACTIVATED' : 'FEATURE_ERROR',
+          vehicleId: data.vehicleId,
+          featureId: data.featureId,
+          ...result
+        }));
+
+        // Envoyer l'état mis à jour UNIQUEMENT de ce véhicule
+        setTimeout(() => {
+          wss.clients.forEach(client => {
+            if (client.readyState === WebSocket.OPEN) {
+              client.send(JSON.stringify(vehicle.getData()));
+            }
+          });
+        }, 100);
+      }
+
+      // Gérer la désactivation de feature
+      if (data.type === 'DEACTIVATE_FEATURE') {
+        const vehicle = vehicles.find(v => v.id === data.vehicleId);
+        
+        if (vehicle) {
+          const result = vehicle.deactivateFeature(data.featureId);
+          
+          ws.send(JSON.stringify({
+            type: result.success ? 'FEATURE_DEACTIVATED' : 'FEATURE_ERROR',
+            vehicleId: data.vehicleId,
+            featureId: data.featureId,
+            ...result
+          }));
+
+          setTimeout(() => {
+            wss.clients.forEach(client => {
+              if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify(vehicle.getData()));
+              }
+            });
+          }, 100);
+        }
       }
     } catch (error) {
       console.error('Error processing message:', error);

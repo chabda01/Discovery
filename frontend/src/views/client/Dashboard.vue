@@ -180,56 +180,63 @@
 
           <!-- RIGHT: Actions & Info -->
           <div class="space-y-6">
-            <!-- Locate Vehicle Card -->
-            <!-- <button
-              @click="locateOnMap"
-              class="w-full group relative bg-gradient-kemet hover:shadow-glow-lg rounded-2xl p-6 transition-all duration-300 overflow-hidden"
+            <!-- Active Features -->
+            <div
+              v-if="activeFeaturesList.length > 0"
+              class="bg-gradient-to-br from-kemet-primary/20 to-kemet-accent/20 backdrop-blur-md rounded-2xl shadow-elevation-2 p-6 border border-kemet-primary/30"
             >
-              <div
-                class="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity"
-              ></div>
-              <div class="relative flex items-center justify-between">
-                <div class="text-left">
-                  <span class="material-symbols-outlined text-4xl mb-2"
-                    >location_on</span
-                  >
-                  <h3 class="text-xl font-bold">Locate Vehicle</h3>
-                  <p class="text-sm opacity-80 mt-1">View on map</p>
-                </div>
-                <span
-                  class="material-symbols-outlined text-3xl group-hover:translate-x-1 transition-transform"
-                  >arrow_forward</span
+              <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-kemet-primary">auto_awesome</span>
+                Active Features
+              </h3>
+              <div class="space-y-2">
+                <div
+                  v-for="feature in activeFeaturesList"
+                  :key="feature.id"
+                  class="flex items-center justify-between p-3 bg-dark-card/50 backdrop-blur-sm rounded-xl"
                 >
+                  <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-kemet-success">{{ feature.icon }}</span>
+                    <span class="text-sm font-medium text-white">{{ feature.name }}</span>
+                  </div>
+                  <span class="px-2 py-1 bg-kemet-success/20 text-kemet-success rounded text-xs font-bold">Active</span>
+                </div>
               </div>
-            </button> -->
+              
+              <!-- Driving Mode Badge -->
+              <div v-if="vehicle.drivingMode !== 'manual'" class="mt-4 p-4 bg-kemet-primary/20 rounded-xl border border-kemet-primary/30">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 bg-gradient-kemet rounded-full flex items-center justify-center">
+                    <span class="material-symbols-outlined text-white">smart_toy</span>
+                  </div>
+                  <div>
+                    <p class="text-xs text-kemet-primary-light uppercase tracking-wider font-semibold">Current Mode</p>
+                    <p class="text-sm font-bold text-white capitalize">{{ vehicle.drivingMode.replace('-', ' ') }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             <!-- Quick Actions -->
             <div
               class="bg-dark-card/40 backdrop-blur-md rounded-2xl shadow-elevation-2 p-6"
             >
               <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
-                <span class="material-symbols-outlined text-kemet-primary"
-                  >lock</span
-                >
+                <span class="material-symbols-outlined text-kemet-primary">tune</span>
                 Quick Actions
               </h3>
               <div class="grid grid-cols-2 gap-3">
                 <button
-                  class="p-4 bg-dark-bg/50 hover:bg-dark-hover rounded-xl transition-all group"
+                  @click="$router.push('/client/features')"
+                  class="p-4 bg-gradient-to-r from-kemet-primary/10 to-kemet-accent/10 hover:from-kemet-primary/20 hover:to-kemet-accent/20 rounded-xl transition-all group"
                 >
-                  <span
-                    class="material-symbols-outlined text-2xl text-kemet-success group-hover:scale-110 transition-transform"
-                    >lock_open</span
-                  >
-                  <p class="text-xs mt-2 font-medium">Unlock</p>
+                  <span class="material-symbols-outlined text-2xl text-kemet-primary group-hover:scale-110 transition-transform">add_circle</span>
+                  <p class="text-xs mt-2 font-medium">Add Features</p>
                 </button>
                 <button
                   class="p-4 bg-dark-bg/50 hover:bg-dark-hover rounded-xl transition-all group"
                 >
-                  <span
-                    class="material-symbols-outlined text-2xl text-slate-400 group-hover:scale-110 transition-transform"
-                    >bar_chart</span
-                  >
+                  <span class="material-symbols-outlined text-2xl text-slate-400 group-hover:scale-110 transition-transform">bar_chart</span>
                   <p class="text-xs mt-2 font-medium">View Stats</p>
                 </button>
               </div>
@@ -380,7 +387,8 @@ export default {
       map: null,
       marker: null,
       showVehicleSelector: false,
-      mapInitialized: false
+      mapInitialized: false,
+      allFeatures: []
     };
   },
 
@@ -408,9 +416,22 @@ export default {
       if (!Number.isFinite(lat) || !Number.isFinite(lng)) return "—";
       return `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
     },
+
+    activeFeaturesList() {
+      if (!this.vehicle || !this.vehicle.activeFeatures) return [];
+      
+      return this.vehicle.activeFeatures
+        .map(id => this.allFeatures.find(f => f.id === id))
+        .filter(Boolean);
+    }
   },
 
   mounted() {
+    // Charger la liste des features
+    import('../../services/featureService').then(module => {
+      this.allFeatures = module.default.getFeatures();
+    });
+
     vehicleService.connect("ws://localhost:8080");
 
     this.unsubscribe = vehicleService.subscribe((vehicles) => {
@@ -422,7 +443,6 @@ export default {
 
       if (this.selectedVehicleId) {
         this.vehicle = vehicles.find((v) => v.id === this.selectedVehicleId);
-        this.updateMap();
       }
     });
   },

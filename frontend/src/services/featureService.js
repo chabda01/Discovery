@@ -87,6 +87,7 @@ class FeatureService {
 
     this.vehicleFeatures = new Map(); // vehicleId -> [featureIds]
     this.pendingActivations = new Map(); // activationId -> activation data
+    this.updateHistory = []; // Historique des activations
   }
 
   getFeatures() {
@@ -109,15 +110,17 @@ class FeatureService {
   }
 
   getVehicleFeatures(vehicleId) {
-    return this.vehicleFeatures.get(vehicleId) || [];
+    const features = this.vehicleFeatures.get(String(vehicleId));
+    return features ? [...features] : []; // Retourner une copie
   }
 
   hasFeature(vehicleId, featureId) {
-    const features = this.vehicleFeatures.get(vehicleId) || [];
+    const features = this.vehicleFeatures.get(String(vehicleId)) || [];
     return features.includes(featureId);
   }
 
   async activateFeature(vehicleId, featureId, paymentMethod) {
+    const vehicleIdStr = String(vehicleId); // Normaliser l'ID
     const feature = this.getFeatureById(featureId);
     
     if (!feature) {
@@ -128,15 +131,20 @@ class FeatureService {
       throw new Error('Feature is currently unavailable');
     }
 
-    if (this.hasFeature(vehicleId, featureId)) {
+    if (this.hasFeature(vehicleIdStr, featureId)) {
       throw new Error('Feature already activated on this vehicle');
+    }
+
+    // Vérifier les prérequis spéciaux
+    if (featureId === 2 && !this.hasFeature(vehicleIdStr, 1)) {
+      throw new Error('Full Self-Driving requires Autopilot to be activated first');
     }
 
     const activationId = `ACT-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     
     const activation = {
       id: activationId,
-      vehicleId,
+      vehicleId: vehicleIdStr,
       featureId,
       feature,
       paymentMethod,
@@ -157,10 +165,20 @@ class FeatureService {
       throw new Error('Activation not found');
     }
 
-    // Ajouter la feature au véhicule
-    const vehicleFeatures = this.vehicleFeatures.get(activation.vehicleId) || [];
-    vehicleFeatures.push(activation.featureId);
-    this.vehicleFeatures.set(activation.vehicleId, vehicleFeatures);
+    const vehicleIdStr = String(activation.vehicleId);
+    
+    // Récupérer ou créer le tableau de features pour ce véhicule
+    const vehicleFeatures = this.vehicleFeatures.get(vehicleIdStr) || [];
+    
+    // Ajouter la feature uniquement si elle n'est pas déjà présente
+    if (!vehicleFeatures.includes(activation.featureId)) {
+      vehicleFeatures.push(activation.featureId);
+      this.vehicleFeatures.set(vehicleIdStr, vehicleFeatures);
+      
+      console.log(`Feature ${activation.featureId} activated for vehicle ${vehicleIdStr}`, {
+        vehicleFeatures: this.vehicleFeatures.get(vehicleIdStr)
+      });
+    }
 
     activation.status = 'completed';
     activation.completedAt = new Date();
