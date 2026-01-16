@@ -13,8 +13,19 @@ class VehicleService {
       return;
     }
 
+    // Si pas d'URL WebSocket (production sans config), ne pas essayer de se connecter
+    if (!simulatorUrl) {
+      console.warn('WebSocket URL not configured. Skipping connection.');
+      return;
+    }
+
     console.log('Connecting to WebSocket:', simulatorUrl);
-    this.ws = new WebSocket(simulatorUrl);
+    try {
+      this.ws = new WebSocket(simulatorUrl);
+    } catch (error) {
+      console.error('Failed to create WebSocket connection:', error);
+      return;
+    }
 
     this.ws.onopen = () => {
       console.log('WebSocket connected successfully');
@@ -48,8 +59,10 @@ class VehicleService {
     this.ws.onclose = () => {
       console.log('WebSocket connection closed');
       this.ws = null;
-      // Reconnexion automatique après 5 secondes
-      setTimeout(() => this.connect(simulatorUrl), 5000);
+      // Reconnexion automatique après 5 secondes seulement si l'URL est valide
+      if (simulatorUrl) {
+        setTimeout(() => this.connect(simulatorUrl), 5000);
+      }
     };
   }
 
