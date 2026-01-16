@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@googlemaps/js-api-loader": "^2.0.2",
     "leaflet": "^1.9.4",
     "vue": "^3.4.0",
     "vue-router": "^4.2.5"

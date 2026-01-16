@@ -1,83 +1,94 @@
 <template>
-  <aside class="w-64 h-full bg-dark-bg flex flex-col relative overflow-hidden">
-    <!-- Animated Background Mesh -->
-    <div class="absolute inset-0 bg-gradient-mesh opacity-30"></div>
-    <div class="absolute inset-0 bg-gradient-to-b from-kemet-primary/5 via-transparent to-kemet-secondary/5"></div>
+  <aside class="glass-sidebar w-64 h-full flex flex-col relative overflow-hidden z-10 bg-white dark:bg-gray-900">
+    <!-- Close button for mobile -->
+    <button
+      @click="$emit('close')"
+      class="lg:hidden absolute top-4 right-4 p-2 glass-effect hover:bg-gray-200/50 dark:hover:bg-white/10 rounded-lg transition-all z-20"
+    >
+      <span class="material-symbols-outlined text-gray-700 dark:text-white text-xl">close</span>
+    </button>
+    <!-- Animated Background -->
+    <div class="absolute inset-0 bg-gradient-mesh opacity-20"></div>
     
     <!-- Glowing Line -->
-    <div class="absolute right-0 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-kemet-primary/30 to-transparent"></div>
+    <div class="absolute right-0 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-kemet-primary/40 to-transparent"></div>
     
     <!-- LOGO -->
-    <div class="relative p-6 flex items-center gap-3">
-      <div class="w-12 h-12 bg-gradient-kemet rounded-xl flex items-center justify-center shadow-glow relative group">
-        <div class="absolute inset-0 bg-gradient-kemet rounded-xl blur-md opacity-50 group-hover:opacity-75 transition-opacity"></div>
-        <span class="material-symbols-outlined font-bold text-white text-2xl relative z-10">bolt</span>
+    <div class="relative p-4 sm:p-6 flex flex-col items-center gap-3 sm:gap-4 z-10">
+      <div class="w-20 h-20 sm:w-28 sm:h-28 lg:w-32 lg:h-32 bg-white dark:bg-gray-900 rounded-xl flex items-center justify-center relative group overflow-hidden shadow-lg border-2 border-gray-200 dark:border-gray-700">
+        <div class="absolute inset-0 bg-kemet-primary/20 dark:bg-kemet-primary/30 rounded-xl blur-md opacity-60 group-hover:opacity-80 transition-opacity"></div>
+        <img 
+          :src="logoImage" 
+          alt="KemetLink Logo" 
+          class="w-full h-full object-contain relative z-10 p-2.5 filter drop-shadow-lg"
+          style="filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));"
+        />
       </div>
-      <div>
-        <h1 class="text-white text-xl font-bold leading-tight drop-shadow-lg">VoltaLink</h1>
-        <p class="text-kemet-primary-light text-xs uppercase tracking-widest font-semibold">
-          Fleet Admin
-        </p>
+      <div class="text-center">
+        <h1 class="text-gray-900 dark:text-white text-base sm:text-lg lg:text-xl font-bold leading-tight drop-shadow-lg transition-colors">KemetLink</h1>
+        <p class="text-kemet-primary/70 dark:text-kemet-primary/80 text-[10px] sm:text-xs uppercase tracking-widest font-semibold transition-colors">Fleet Admin</p>
       </div>
     </div>
 
     <!-- NAV -->
-    <nav class="relative flex-1 px-4 py-6 space-y-2">
+    <nav class="relative flex-1 px-4 py-6 space-y-2 z-10">
       <RouterLink
         to="/admin"
         :class="linkClass('/admin')"
-        class="group w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 relative overflow-hidden"
+        class="group w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 relative overflow-hidden glass-effect hover:bg-gray-200/50 dark:hover:bg-white/10"
       >
-        <div class="absolute inset-0 bg-gradient-kemet opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        <span class="material-symbols-outlined text-xl relative z-10 group-hover:scale-110 transition-transform">dashboard</span>
-        <span class="text-sm font-semibold relative z-10">Dashboard</span>
+        <span class="material-symbols-outlined text-xl relative z-10 group-hover:scale-110 transition-transform text-gray-700 dark:text-white">dashboard</span>
+        <span class="text-sm font-semibold relative z-10 text-gray-700 dark:text-white">Dashboard</span>
       </RouterLink>
 
       <RouterLink
         :to="{ name: 'fleet' }"
         :class="linkClass('/admin/fleet')"
-        class="group w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 relative overflow-hidden"
+        class="group w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 relative overflow-hidden glass-effect hover:bg-gray-200/50 dark:hover:bg-white/10"
       >
-        <div class="absolute inset-0 bg-gradient-kemet opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        <span class="material-symbols-outlined text-xl relative z-10 group-hover:scale-110 transition-transform">local_shipping</span>
-        <span class="text-sm font-semibold relative z-10">Fleet</span>
+        <span class="material-symbols-outlined text-xl relative z-10 group-hover:scale-110 transition-transform text-gray-700 dark:text-white">local_shipping</span>
+        <span class="text-sm font-semibold relative z-10 text-gray-700 dark:text-white">Fleet</span>
       </RouterLink>
 
       <RouterLink
         to="/admin/fota"
         :class="linkClass('/admin/fota')"
-        class="group w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 relative overflow-hidden"
+        class="group w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 relative overflow-hidden glass-effect hover:bg-gray-200/50 dark:hover:bg-white/10"
       >
-        <div class="absolute inset-0 bg-gradient-kemet opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        <span class="material-symbols-outlined text-xl relative z-10 group-hover:scale-110 transition-transform">memory</span>
-        <span class="text-sm font-semibold relative z-10">Firmware</span>
+        <span class="material-symbols-outlined text-xl relative z-10 group-hover:scale-110 transition-transform text-gray-700 dark:text-white">memory</span>
+        <span class="text-sm font-semibold relative z-10 text-gray-700 dark:text-white">Firmware</span>
       </RouterLink>
 
       <RouterLink
         to="/admin/features"
         :class="linkClass('/admin/features')"
-        class="group w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 relative overflow-hidden"
+        class="group w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-300 relative overflow-hidden glass-effect hover:bg-gray-200/50 dark:hover:bg-white/10"
       >
-        <div class="absolute inset-0 bg-gradient-kemet opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        <span class="material-symbols-outlined text-xl relative z-10 group-hover:scale-110 transition-transform">auto_awesome</span>
-        <span class="text-sm font-semibold relative z-10">Features</span>
+        <span class="material-symbols-outlined text-xl relative z-10 group-hover:scale-110 transition-transform text-gray-700 dark:text-white">auto_awesome</span>
+        <span class="text-sm font-semibold relative z-10 text-gray-700 dark:text-white">Features</span>
       </RouterLink>
     </nav>
 
     <!-- USER CARD -->
-    <div class="relative p-4 mt-auto">
-      <div class="p-4 rounded-xl bg-dark-card/50 backdrop-blur-md shadow-elevation-2 relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-br from-kemet-primary/10 to-transparent"></div>
-        <div class="flex items-center gap-3 mb-2 relative z-10">
-          <div class="w-10 h-10 bg-gradient-kemet rounded-full flex items-center justify-center shadow-glow-sm">
-            <span class="text-white font-bold text-lg">KM</span>
+    <div class="relative p-4 mt-auto z-10 space-y-2">
+      <div class="glass-card-primary p-4 rounded-xl relative overflow-hidden">
+        <div class="flex items-center gap-3 relative z-10">
+          <div class="w-10 h-10 glass-card-primary rounded-full flex items-center justify-center">
+            <span class="text-kemet-primary dark:text-white font-bold text-lg">KM</span>
           </div>
           <div class="flex-1">
-            <p class="text-sm font-bold text-white">Kwame Mensah</p>
-            <p class="text-xs text-kemet-primary-light">Fleet Manager</p>
+            <p class="text-sm font-bold text-gray-900 dark:text-white transition-colors">Kwame Mensah</p>
+            <p class="text-xs text-gray-600 dark:text-white/60 transition-colors">Fleet Manager</p>
           </div>
         </div>
       </div>
+      <button
+        @click="handleLogout"
+        class="w-full glass-effect hover:bg-red-500/20 dark:hover:bg-red-500/20 border border-red-500/30 dark:border-red-500/30 text-red-600 dark:text-red-400 px-4 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 group"
+      >
+        <span class="material-symbols-outlined text-lg group-hover:scale-110 transition-transform">logout</span>
+        <span>Logout</span>
+      </button>
     </div>
 
     <!-- Bottom Glow -->
@@ -86,14 +97,36 @@
 </template>
 
 <script setup>
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import logoImage from "../../assets/logo_KemeyLink.png";
+
+defineEmits(['close']);
+
 const route = useRoute();
+const router = useRouter();
 
 function linkClass(path) {
-  const isActive = route.path === path || route.path.startsWith(path + '/');
+  let isActive;
+  
+  // For dashboard, only match exact route name
+  if (path === '/admin') {
+    isActive = route.name === 'admin-dashboard';
+  } else {
+    // For other routes, match path or sub-paths
+    isActive = route.path === path || route.path.startsWith(path + '/');
+  }
 
   return isActive
-    ? "bg-gradient-kemet text-white shadow-glow"
-    : "text-slate-400 hover:text-white hover:bg-white/5 hover:shadow-elevation-1";
+    ? "glass-effect-primary text-kemet-primary dark:text-white"
+    : "text-gray-600 dark:text-white/60 hover:text-gray-900 dark:hover:text-white";
+}
+
+function handleLogout() {
+  // Clear authentication tokens
+  localStorage.removeItem("authToken");
+  sessionStorage.removeItem("authToken");
+  
+  // Redirect to login page
+  router.push("/login");
 }
 </script>

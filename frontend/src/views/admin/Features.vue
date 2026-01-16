@@ -1,58 +1,55 @@
 <template>
-  <div class="flex overflow-hidden bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
-    <main class="flex-1 flex flex-col overflow-y-auto">
-      <!-- TOP BAR -->
-      <header class="flex items-center justify-between px-8 py-4 border-b border-border-dark sticky top-0 bg-card-dark">
-        <h2 class="text-xl font-bold">Features Catalog</h2>
-        <button
-          @click="showCreateModal = true"
-          class="px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded-lg font-medium transition-all flex items-center gap-2"
-        >
-          <span class="material-symbols-outlined">add</span>
-          Create Feature
-        </button>
-      </header>
+  <div class="space-y-8">
+    <!-- TOP BAR -->
+    <header class="glass-topbar flex items-center justify-between px-8 py-4 rounded-2xl">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-white transition-colors">Features Catalog</h2>
+      <button
+        @click="showCreateModal = true"
+        class="kemet-btn flex items-center gap-2"
+      >
+        <span class="material-symbols-outlined">add</span>
+        Create Feature
+      </button>
+    </header>
 
-      <!-- CONTENT -->
-      <div class="p-8 space-y-8">
-        <!-- Stats -->
-        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div class="bg-card-dark p-6 rounded-2xl border border-border-dark">
+    <!-- Stats -->
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="glass-card p-6 rounded-2xl">
             <div class="flex items-center justify-between mb-2">
-              <p class="text-slate-400 text-sm">Total Features</p>
-              <span class="material-symbols-outlined text-primary">auto_awesome</span>
+              <p class="text-gray-600 dark:text-white/60 text-sm transition-colors">Total Features</p>
+              <span class="material-symbols-outlined text-kemet-primary">auto_awesome</span>
             </div>
-            <p class="text-3xl font-bold text-white">{{ stats.totalFeatures }}</p>
+            <p class="text-3xl font-bold text-gray-900 dark:text-white transition-colors">{{ stats.totalFeatures }}</p>
           </div>
 
-          <div class="bg-card-dark p-6 rounded-2xl border border-border-dark">
+          <div class="glass-card p-6 rounded-2xl">
             <div class="flex items-center justify-between mb-2">
-              <p class="text-slate-400 text-sm">Total Activations</p>
+              <p class="text-gray-600 dark:text-white/60 text-sm transition-colors">Total Activations</p>
               <span class="material-symbols-outlined text-green-500">check_circle</span>
             </div>
             <p class="text-3xl font-bold text-green-500">{{ stats.totalActivations }}</p>
           </div>
 
-          <div class="bg-card-dark p-6 rounded-2xl border border-border-dark">
+          <div class="glass-card p-6 rounded-2xl">
             <div class="flex items-center justify-between mb-2">
-              <p class="text-slate-400 text-sm">Pending</p>
+              <p class="text-gray-600 dark:text-white/60 text-sm transition-colors">Pending</p>
               <span class="material-symbols-outlined text-yellow-500">pending</span>
             </div>
             <p class="text-3xl font-bold text-yellow-500">{{ stats.pendingActivations }}</p>
           </div>
 
-          <div class="bg-card-dark p-6 rounded-2xl border border-border-dark">
+          <div class="glass-card p-6 rounded-2xl">
             <div class="flex items-center justify-between mb-2">
-              <p class="text-slate-400 text-sm">Total Revenue</p>
+              <p class="text-gray-600 dark:text-white/60 text-sm transition-colors">Total Revenue</p>
               <span class="material-symbols-outlined text-blue-500">payments</span>
             </div>
-            <p class="text-2xl font-bold text-white">{{ formatCurrency(stats.totalRevenue) }}</p>
+            <p class="text-2xl font-bold text-gray-900 dark:text-white transition-colors">{{ formatCurrency(stats.totalRevenue) }}</p>
           </div>
         </section>
 
         <!-- Features by Category -->
         <div v-for="(features, category) in featuresByCategory" :key="category" class="space-y-4">
-          <h3 class="text-xl font-bold text-white flex items-center gap-2">
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white transition-colors flex items-center gap-2">
             <span class="material-symbols-outlined text-primary">{{ getCategoryIcon(category) }}</span>
             {{ category }}
           </h3>
@@ -61,18 +58,18 @@
             <div
               v-for="feature in features"
               :key="feature.id"
-              class="bg-card-dark rounded-2xl border border-border-dark overflow-hidden hover:border-primary/50 transition-all"
+              class="glass-card rounded-2xl overflow-hidden hover:border-kemet-primary/50 transition-all"
             >
               <!-- Header -->
-              <div class="p-6 border-b border-border-dark">
+              <div class="p-6 border-b border-white/10">
                 <div class="flex items-start justify-between mb-3">
                   <div class="flex items-center gap-3">
                     <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
                       <span class="material-symbols-outlined text-primary text-2xl">{{ feature.icon }}</span>
                     </div>
                     <div>
-                      <h4 class="text-lg font-bold text-white">{{ feature.name }}</h4>
-                      <p class="text-sm text-slate-400">{{ formatCurrency(feature.price) }}</p>
+                      <h4 class="text-lg font-bold text-gray-900 dark:text-white transition-colors">{{ feature.name }}</h4>
+                      <p class="text-sm text-gray-600 dark:text-slate-400 transition-colors">{{ formatCurrency(feature.price) }}</p>
                     </div>
                   </div>
                   <span
@@ -84,20 +81,20 @@
                     {{ feature.active ? 'Active' : 'Inactive' }}
                   </span>
                 </div>
-                <p class="text-sm text-slate-300">{{ feature.description }}</p>
+                <p class="text-sm text-gray-700 dark:text-slate-300 transition-colors">{{ feature.description }}</p>
               </div>
 
               <!-- Stats -->
               <div class="p-6 space-y-3">
                 <div class="flex justify-between items-center">
-                  <span class="text-sm text-slate-400">Activations</span>
-                  <span class="text-lg font-bold text-white">
+                  <span class="text-sm text-gray-600 dark:text-slate-400 transition-colors">Activations</span>
+                  <span class="text-lg font-bold text-gray-900 dark:text-white transition-colors">
                     {{ stats.activationsByFeature[feature.id] || 0 }}
                   </span>
                 </div>
 
                 <div v-if="feature.subscription" class="flex justify-between items-center">
-                  <span class="text-sm text-slate-400">Type</span>
+                  <span class="text-sm text-gray-600 dark:text-slate-400 transition-colors">Type</span>
                   <span class="text-sm font-medium text-blue-400 capitalize">
                     {{ feature.subscription }}
                   </span>
@@ -112,7 +109,7 @@
                 <div class="flex gap-2 pt-3">
                   <button
                     @click="editFeature(feature)"
-                    class="flex-1 px-4 py-2 bg-background-dark hover:bg-charcoal-light text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2"
+                    class="flex-1 px-4 py-2 glass-effect hover:bg-white/10 text-gray-900 dark:text-white transition-colors rounded-lg font-medium transition-all flex items-center justify-center gap-2"
                   >
                     <span class="material-symbols-outlined text-sm">edit</span>
                     Edit
@@ -122,8 +119,8 @@
                     :class="[
                       'flex-1 px-4 py-2 rounded-lg font-medium transition-all flex items-center justify-center gap-2',
                       feature.active
-                        ? 'bg-red-500/10 hover:bg-red-500/20 text-red-400'
-                        : 'bg-green-500/10 hover:bg-green-500/20 text-green-400'
+                        ? 'bg-red-500/20 hover:bg-red-500/30 text-red-400 glass-effect'
+                        : 'bg-green-500/20 hover:bg-green-500/30 text-green-400 glass-effect'
                     ]"
                   >
                     <span class="material-symbols-outlined text-sm">
@@ -136,8 +133,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </main>
 
     <!-- Create/Edit Modal -->
     <div
@@ -145,16 +140,16 @@
       class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
       @click.self="closeCreateModal"
     >
-      <div class="bg-card-dark rounded-2xl border border-border-dark p-8 max-w-2xl w-full mx-4">
+      <div class="glass-card-lg rounded-2xl p-8 max-w-2xl w-full mx-4">
         <div class="flex items-center justify-between mb-6">
-          <h3 class="text-2xl font-bold text-white">
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white transition-colors">
             {{ editingFeature ? 'Edit Feature' : 'Create New Feature' }}
           </h3>
           <button
             @click="closeCreateModal"
             class="p-2 hover:bg-background-dark rounded-lg transition-colors"
           >
-            <span class="material-symbols-outlined text-slate-400">close</span>
+            <span class="material-symbols-outlined text-gray-600 dark:text-slate-400 transition-colors">close</span>
           </button>
         </div>
 
@@ -166,16 +161,16 @@
                 v-model="formData.name"
                 type="text"
                 placeholder="e.g., Autopilot"
-                class="w-full px-4 py-3 bg-background-dark border border-border-dark rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary"
+                class="kemet-input w-full"
                 required
               />
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-slate-300 mb-2">Category</label>
+              <label class="block text-sm font-medium text-white/80 mb-2">Category</label>
               <select
                 v-model="formData.category"
-                class="w-full px-4 py-3 bg-background-dark border border-border-dark rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                class="kemet-input w-full"
                 required
               >
                 <option value="Driving">Driving</option>
@@ -194,32 +189,32 @@
               v-model="formData.description"
               rows="3"
               placeholder="Describe the feature..."
-              class="w-full px-4 py-3 bg-background-dark border border-border-dark rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+              class="kemet-input w-full resize-none"
               required
             ></textarea>
           </div>
 
           <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-slate-300 mb-2">Price (XOF)</label>
+              <label class="block text-sm font-medium text-white/80 mb-2">Price (XOF)</label>
               <input
                 v-model.number="formData.price"
                 type="number"
                 min="0"
                 step="100"
                 placeholder="5000"
-                class="w-full px-4 py-3 bg-background-dark border border-border-dark rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary"
+                class="kemet-input w-full"
                 required
               />
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-slate-300 mb-2">Icon</label>
+              <label class="block text-sm font-medium text-white/80 mb-2">Icon</label>
               <input
                 v-model="formData.icon"
                 type="text"
                 placeholder="auto_mode"
-                class="w-full px-4 py-3 bg-background-dark border border-border-dark rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary"
+                class="kemet-input w-full"
                 required
               />
             </div>
@@ -228,14 +223,14 @@
           <div class="flex gap-4">
             <button
               type="submit"
-              class="flex-1 px-6 py-3 bg-primary hover:bg-primary/80 text-white rounded-lg font-medium transition-all"
+              class="kemet-btn flex-1"
             >
               {{ editingFeature ? 'Update Feature' : 'Create Feature' }}
             </button>
             <button
               type="button"
               @click="closeCreateModal"
-              class="px-6 py-3 bg-background-dark hover:bg-charcoal-light text-slate-300 rounded-lg font-medium transition-all"
+              class="px-6 py-3 glass-effect hover:bg-white/10 text-white/70 rounded-lg font-medium transition-all"
             >
               Cancel
             </button>

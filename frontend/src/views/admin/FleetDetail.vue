@@ -20,8 +20,8 @@
         <section class="bg-card-dark rounded-2xl border border-border-dark p-6">
           <div class="flex items-start justify-between">
             <div>
-              <h1 class="text-3xl font-bold text-white mb-2">{{ vehicle.name }}</h1>
-              <p class="text-slate-400">ID: {{ vehicle.id }} • {{ vehicle.country }}</p>
+              <h1 class="text-3xl font-bold text-gray-900 dark:text-white transition-colors mb-2">{{ vehicle.name }}</h1>
+              <p class="text-gray-600 dark:text-slate-400 transition-colors">ID: {{ vehicle.id }} • {{ vehicle.country }}</p>
             </div>
             <div class="flex gap-2">
               <span
@@ -51,14 +51,14 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <!-- Battery Info -->
           <section class="bg-card-dark rounded-2xl border border-border-dark p-6">
-            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white transition-colors mb-4 flex items-center gap-2">
               <span class="material-symbols-outlined">battery_charging_full</span>
               Battery Status
             </h3>
             <div class="space-y-4">
               <div>
                 <div class="flex justify-between items-center mb-3">
-                  <span class="text-slate-400">Current Level</span>
+                  <span class="text-gray-600 dark:text-slate-400 transition-colors">Current Level</span>
                   <span :class="['text-2xl font-bold', getBatteryColorClass(vehicle.battery)]">
                     {{ vehicle.battery }}%
                   </span>
@@ -79,7 +79,7 @@
                 </div>
                 <div class="text-center p-4 bg-background-dark rounded-lg">
                   <p class="text-xs text-slate-400 mb-1">Range</p>
-                  <p class="text-lg font-bold text-white">
+                  <p class="text-lg font-bold text-gray-900 dark:text-white transition-colors">
                     {{ Math.round(vehicle.battery * 4) }} km
                   </p>
                 </div>
@@ -89,7 +89,7 @@
 
           <!-- Connectivity & Performance -->
           <section class="bg-card-dark rounded-2xl border border-border-dark p-6">
-            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white transition-colors mb-4 flex items-center gap-2">
               <span class="material-symbols-outlined">speed</span>
               Performance & Connectivity
             </h3>
@@ -99,7 +99,7 @@
                   <span :class="['material-symbols-outlined', vehicle.isConnected ? 'text-green-500' : 'text-red-500']">
                     {{ vehicle.isConnected ? 'wifi' : 'wifi_off' }}
                   </span>
-                  <p class="text-xs text-slate-400">Internet</p>
+                  <p class="text-xs text-gray-600 dark:text-slate-400 transition-colors">Internet</p>
                 </div>
                 <p :class="['text-xl font-bold', vehicle.isConnected ? 'text-green-500' : 'text-red-500']">
                   {{ vehicle.isConnected ? 'Connected' : 'Offline' }}
@@ -107,23 +107,23 @@
               </div>
               <div class="p-4 bg-background-dark rounded-lg">
                 <p class="text-xs text-slate-400 mb-1">Firmware</p>
-                <p class="text-xl font-bold text-white font-mono">v{{ vehicle.firmwareVersion }}</p>
+                <p class="text-xl font-bold text-gray-900 dark:text-white transition-colors font-mono">v{{ vehicle.firmwareVersion }}</p>
               </div>
               <div class="p-4 bg-background-dark rounded-lg">
                 <p class="text-xs text-slate-400 mb-1">Current Speed</p>
-                <p class="text-2xl font-bold text-white">{{ vehicle.speed }} <span class="text-sm text-slate-400">km/h</span></p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white transition-colors">{{ vehicle.speed }} <span class="text-sm text-gray-600 dark:text-slate-400 transition-colors">km/h</span></p>
               </div>
               <div class="p-4 bg-background-dark rounded-lg">
                 <p class="text-xs text-slate-400 mb-1">Max Speed</p>
-                <p class="text-2xl font-bold text-white">200 <span class="text-sm text-slate-400">km/h</span></p>
+                <p class="text-2xl font-bold text-gray-900 dark:text-white transition-colors">200 <span class="text-sm text-gray-600 dark:text-slate-400 transition-colors">km/h</span></p>
               </div>
               <div class="p-4 bg-background-dark rounded-lg">
                 <p class="text-xs text-slate-400 mb-1">Odometer</p>
-                <p class="text-xl font-bold text-white">{{ Math.floor(Math.random() * 50000) }} <span class="text-sm text-slate-400">km</span></p>
+                <p class="text-xl font-bold text-gray-900 dark:text-white transition-colors">{{ Math.floor(Math.random() * 50000) }} <span class="text-sm text-gray-600 dark:text-slate-400 transition-colors">km</span></p>
               </div>
               <div class="p-4 bg-background-dark rounded-lg">
                 <p class="text-xs text-slate-400 mb-1">Efficiency</p>
-                <p class="text-xl font-bold text-green-500">18.5 <span class="text-sm text-slate-400">kWh/100km</span></p>
+                <p class="text-xl font-bold text-green-500">18.5 <span class="text-sm text-gray-600 dark:text-slate-400 transition-colors">kWh/100km</span></p>
               </div>
             </div>
           </section>
@@ -131,7 +131,7 @@
 
         <!-- Location Map -->
         <section class="bg-card-dark rounded-2xl border border-border-dark p-6">
-          <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white transition-colors mb-4 flex items-center gap-2">
             <span class="material-symbols-outlined">location_on</span>
             Current Location
           </h3>
@@ -140,13 +140,13 @@
           </div>
           <div class="mt-4 p-4 bg-background-dark rounded-lg">
             <p class="text-sm text-slate-400 mb-1">Coordinates</p>
-            <p class="font-mono text-white">{{ vehicle.lat.toFixed(6) }}, {{ vehicle.lng.toFixed(6) }}</p>
+            <p class="font-mono text-gray-900 dark:text-white transition-colors">{{ vehicle.lat.toFixed(6) }}, {{ vehicle.lng.toFixed(6) }}</p>
           </div>
         </section>
 
         <!-- Activity Log -->
         <section class="bg-card-dark rounded-2xl border border-border-dark p-6">
-          <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white transition-colors mb-4 flex items-center gap-2">
             <span class="material-symbols-outlined">history</span>
             Recent Activity
           </h3>
@@ -154,8 +154,8 @@
             <div class="flex items-center gap-4 p-3 bg-background-dark rounded-lg">
               <span class="material-symbols-outlined text-primary">update</span>
               <div class="flex-1">
-                <p class="text-white font-medium">Status Update</p>
-                <p class="text-sm text-slate-400">{{ formatTime(vehicle.lastUpdate) }}</p>
+                <p class="text-gray-900 dark:text-white transition-colors font-medium">Status Update</p>
+                <p class="text-sm text-gray-600 dark:text-slate-400 transition-colors">{{ formatTime(vehicle.lastUpdate) }}</p>
               </div>
             </div>
           </div>

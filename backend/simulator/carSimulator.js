@@ -180,39 +180,10 @@ class VehicleSimulator {
 // Coordonnées des principales villes africaines
 const vehicles = [
   // Bénin - Cotonou
-  new VehicleSimulator(1, 'Tesla Model S', 'Benin', 6.3703, 2.3912),
-  new VehicleSimulator(2, 'Tesla Model 3', 'Benin', 6.3703, 2.3912),
-  
-  // Nigéria - Lagos
-  new VehicleSimulator(3, 'Tesla Model X', 'Nigeria', 6.5244, 3.3792),
-  new VehicleSimulator(4, 'Tesla Model Y', 'Nigeria', 6.5244, 3.3792),
-  new VehicleSimulator(5, 'Rivian R1T', 'Nigeria', 6.5244, 3.3792),
-  
+  new VehicleSimulator(1, 'Black Gezo', 'Benin', 6.3703, 22.3912),
+  new VehicleSimulator(4, 'Orange Gezo', 'Nigeria', 6.5244, 3.3792),
   // Afrique du Sud - Johannesburg
-  new VehicleSimulator(6, 'Lucid Air', 'South Africa', -26.2041, 28.0473),
-  new VehicleSimulator(7, 'Porsche Taycan', 'South Africa', -26.2041, 28.0473),
-  
-  // Afrique du Sud - Cape Town
-  new VehicleSimulator(8, 'Audi e-tron', 'South Africa', -33.9249, 18.4241),
-  
-  // Kenya - Nairobi
-  new VehicleSimulator(9, 'BMW iX', 'Kenya', -1.2864, 36.8172),
-  new VehicleSimulator(10, 'Mercedes EQS', 'Kenya', -1.2864, 36.8172),
-  
-  // Ghana - Accra
-  new VehicleSimulator(11, 'Volkswagen ID.4', 'Ghana', 5.6037, -0.1870),
-  
-  // Côte d\'Ivoire - Abidjan
-  new VehicleSimulator(12, 'Hyundai Ioniq 5', 'Ivory Coast', 5.3600, -4.0083),
-  
-  // Sénégal - Dakar
-  new VehicleSimulator(13, 'Kia EV6', 'Senegal', 14.7167, -17.4677),
-  
-  // Égypte - Le Caire
-  new VehicleSimulator(14, 'Polestar 2', 'Egypt', 30.0444, 31.2357),
-  
-  // Maroc - Casablanca
-  new VehicleSimulator(15, 'Nissan Leaf', 'Morocco', 33.5731, -7.5898)
+  new VehicleSimulator(6, 'Red Gezo', 'South Africa', -26.2041, 28.0473),
 ];
 
 // Envoyer les données à tous les clients connectés

@@ -1,57 +1,54 @@
 <template>
-  <div class="flex overflow-hidden bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
-    <main class="flex-1 flex flex-col overflow-y-auto">
-      <!-- TOP BAR -->
-      <header class="flex items-center justify-between px-8 py-4 border-b border-border-dark sticky top-0 bg-card-dark">
-        <h2 class="text-xl font-bold">FOTA Control Center</h2>
-        <button
-          @click="showUploadModal = true"
-          class="px-4 py-2 bg-primary hover:bg-primary/80 text-white rounded-lg font-medium transition-all flex items-center gap-2"
-        >
-          <span class="material-symbols-outlined">upload</span>
-          Upload Update
-        </button>
-      </header>
+  <div class="space-y-8">
+    <!-- TOP BAR -->
+    <header class="glass-topbar flex items-center justify-between px-8 py-4 rounded-2xl">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-white transition-colors">FOTA Control Center</h2>
+      <button
+        @click="showUploadModal = true"
+        class="kemet-btn flex items-center gap-2"
+      >
+        <span class="material-symbols-outlined">upload</span>
+        Upload Update
+      </button>
+    </header>
 
-      <!-- CONTENT -->
-      <div class="p-8 space-y-8">
-        <!-- Stats -->
-        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          <div class="bg-card-dark p-6 rounded-2xl border border-border-dark">
+    <!-- Stats -->
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div class="glass-card p-6 rounded-2xl">
             <div class="flex items-center justify-between mb-2">
-              <p class="text-slate-400 text-sm">Total Vehicles</p>
-              <span class="material-symbols-outlined text-primary">directions_car</span>
+              <p class="text-gray-600 dark:text-white/60 text-sm transition-colors">Total Vehicles</p>
+              <span class="material-symbols-outlined text-kemet-primary">directions_car</span>
             </div>
-            <p class="text-3xl font-bold text-white">{{ stats.totalVehicles }}</p>
+            <p class="text-3xl font-bold text-gray-900 dark:text-white transition-colors">{{ stats.totalVehicles }}</p>
           </div>
 
-          <div class="bg-card-dark p-6 rounded-2xl border border-border-dark">
+          <div class="glass-card p-6 rounded-2xl">
             <div class="flex items-center justify-between mb-2">
-              <p class="text-slate-400 text-sm">Up to Date</p>
+              <p class="text-gray-600 dark:text-white/60 text-sm transition-colors">Up to Date</p>
               <span class="material-symbols-outlined text-green-500">check_circle</span>
             </div>
             <p class="text-3xl font-bold text-green-500">{{ stats.upToDate }}</p>
           </div>
 
-          <div class="bg-card-dark p-6 rounded-2xl border border-border-dark">
+          <div class="glass-card p-6 rounded-2xl">
             <div class="flex items-center justify-between mb-2">
-              <p class="text-slate-400 text-sm">Updating</p>
+              <p class="text-gray-600 dark:text-white/60 text-sm transition-colors">Updating</p>
               <span class="material-symbols-outlined text-blue-500">sync</span>
             </div>
             <p class="text-3xl font-bold text-blue-500">{{ stats.updating }}</p>
           </div>
 
-          <div class="bg-card-dark p-6 rounded-2xl border border-border-dark">
+          <div class="glass-card p-6 rounded-2xl">
             <div class="flex items-center justify-between mb-2">
-              <p class="text-slate-400 text-sm">Pending</p>
+              <p class="text-gray-600 dark:text-white/60 text-sm transition-colors">Pending</p>
               <span class="material-symbols-outlined text-yellow-500">pending</span>
             </div>
             <p class="text-3xl font-bold text-yellow-500">{{ stats.pendingUpdate }}</p>
           </div>
 
-          <div class="bg-card-dark p-6 rounded-2xl border border-border-dark">
+          <div class="glass-card p-6 rounded-2xl">
             <div class="flex items-center justify-between mb-2">
-              <p class="text-slate-400 text-sm">Offline</p>
+              <p class="text-gray-600 dark:text-white/60 text-sm transition-colors">Offline</p>
               <span class="material-symbols-outlined text-red-500">cloud_off</span>
             </div>
             <p class="text-3xl font-bold text-red-500">{{ stats.offline }}</p>
@@ -59,26 +56,26 @@
         </section>
 
         <!-- Version Distribution -->
-        <section class="bg-card-dark rounded-2xl border border-border-dark p-6">
-          <h3 class="text-lg font-bold text-white mb-4">Firmware Version Distribution</h3>
+        <section class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white transition-colors mb-4">Firmware Version Distribution</h3>
           <div class="space-y-3">
             <div
               v-for="(count, version) in stats.versions"
               :key="version"
-              class="flex items-center justify-between p-4 bg-background-dark rounded-lg"
+              class="flex items-center justify-between p-4 glass-effect rounded-lg"
             >
               <div class="flex items-center gap-3">
-                <span class="material-symbols-outlined text-primary">memory</span>
-                <span class="font-medium text-white">v{{ version }}</span>
+                <span class="material-symbols-outlined text-kemet-primary">memory</span>
+                <span class="font-medium text-gray-900 dark:text-white transition-colors">v{{ version }}</span>
               </div>
               <div class="flex items-center gap-4">
-                <div class="w-48 bg-charcoal-light rounded-full h-2">
+                <div class="w-48 bg-white/5 rounded-full h-2">
                   <div
-                    class="bg-primary h-2 rounded-full transition-all"
+                    class="bg-kemet-primary h-2 rounded-full transition-all"
                     :style="{ width: `${(count / stats.totalVehicles) * 100}%` }"
                   ></div>
                 </div>
-                <span class="text-slate-400 text-sm font-medium w-16 text-right">
+                <span class="text-gray-600 dark:text-white/60 text-sm transition-colors font-medium w-16 text-right">
                   {{ count }} / {{ stats.totalVehicles }}
                 </span>
               </div>
@@ -87,18 +84,18 @@
         </section>
 
         <!-- Available Updates -->
-        <section class="bg-card-dark rounded-2xl border border-border-dark p-6">
-          <h3 class="text-lg font-bold text-white mb-4">Available Updates</h3>
+        <section class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white transition-colors mb-4">Available Updates</h3>
           <div class="space-y-4">
             <div
               v-for="update in updates"
               :key="update.id"
-              class="p-4 bg-background-dark rounded-lg border border-border-dark"
+              class="p-4 glass-effect rounded-lg"
             >
               <div class="flex items-start justify-between">
                 <div class="flex-1">
                   <div class="flex items-center gap-3 mb-2">
-                    <h4 class="text-white font-bold">v{{ update.version }}</h4>
+                    <h4 class="text-gray-900 dark:text-white transition-colors font-bold">v{{ update.version }}</h4>
                     <span
                       :class="[
                         'px-3 py-1 rounded-full text-xs font-medium',
@@ -111,7 +108,7 @@
                     </span>
                   </div>
                   <p class="text-slate-300 mb-2">{{ update.name }}</p>
-                  <p class="text-sm text-slate-400">{{ update.description }}</p>
+                  <p class="text-sm text-gray-600 dark:text-slate-400 transition-colors">{{ update.description }}</p>
                   <div class="flex items-center gap-4 mt-3 text-xs text-slate-500">
                     <span>Released: {{ formatDate(update.releaseDate) }}</span>
                     <span>•</span>
@@ -124,26 +121,26 @@
         </section>
 
         <!-- Vehicle Update Status -->
-        <section class="bg-card-dark rounded-2xl border border-border-dark p-6">
-          <h3 class="text-lg font-bold text-white mb-4">Vehicle Update Status</h3>
+        <section class="glass-card rounded-2xl p-6">
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white transition-colors mb-4">Vehicle Update Status</h3>
           <div class="overflow-x-auto">
             <table class="w-full">
               <thead>
-                <tr class="border-b border-border-dark">
-                  <th class="text-left text-sm font-semibold text-slate-400 pb-3">Vehicle</th>
-                  <th class="text-left text-sm font-semibold text-slate-400 pb-3">Current Version</th>
-                  <th class="text-left text-sm font-semibold text-slate-400 pb-3">Status</th>
-                  <th class="text-left text-sm font-semibold text-slate-400 pb-3">Connection</th>
-                  <th class="text-left text-sm font-semibold text-slate-400 pb-3">Update Status</th>
+                <tr class="border-b border-white/10">
+                  <th class="text-left text-sm font-semibold text-white/60 pb-3">Vehicle</th>
+                  <th class="text-left text-sm font-semibold text-white/60 pb-3">Current Version</th>
+                  <th class="text-left text-sm font-semibold text-white/60 pb-3">Status</th>
+                  <th class="text-left text-sm font-semibold text-white/60 pb-3">Connection</th>
+                  <th class="text-left text-sm font-semibold text-white/60 pb-3">Update Status</th>
                 </tr>
               </thead>
               <tbody>
                 <tr
                   v-for="vehicle in vehicles"
                   :key="vehicle.id"
-                  class="border-b border-border-dark/50 hover:bg-background-dark/50"
+                  class="border-b border-white/10 hover:bg-white/5"
                 >
-                  <td class="py-3 text-white font-medium">{{ vehicle.name }}</td>
+                  <td class="py-3 text-gray-900 dark:text-white transition-colors font-medium">{{ vehicle.name }}</td>
                   <td class="py-3 text-slate-300 font-mono text-sm">v{{ vehicle.firmwareVersion }}</td>
                   <td class="py-3">
                     <span :class="getVehicleStatusClass(vehicle)">
@@ -196,23 +193,20 @@
             </table>
           </div>
         </section>
-      </div>
-    </main>
-
     <!-- Upload Modal -->
     <div
       v-if="showUploadModal"
       class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
       @click.self="showUploadModal = false"
     >
-      <div class="bg-card-dark rounded-2xl border border-border-dark p-8 max-w-2xl w-full mx-4">
+      <div class="glass-card-lg rounded-2xl p-8 max-w-2xl w-full mx-4">
         <div class="flex items-center justify-between mb-6">
-          <h3 class="text-2xl font-bold text-white">Upload Firmware Update</h3>
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white transition-colors">Upload Firmware Update</h3>
           <button
             @click="showUploadModal = false"
             class="p-2 hover:bg-background-dark rounded-lg transition-colors"
           >
-            <span class="material-symbols-outlined text-slate-400">close</span>
+            <span class="material-symbols-outlined text-gray-600 dark:text-slate-400 transition-colors">close</span>
           </button>
         </div>
 
@@ -223,52 +217,52 @@
               v-model="newUpdate.version"
               type="text"
               placeholder="e.g., 1.1.0"
-              class="w-full px-4 py-3 bg-background-dark border border-border-dark rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary"
+              class="kemet-input w-full"
               required
             />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-slate-300 mb-2">Update Name</label>
+            <label class="block text-sm font-medium text-white/80 mb-2">Update Name</label>
             <input
               v-model="newUpdate.name"
               type="text"
               placeholder="e.g., Performance Improvements"
-              class="w-full px-4 py-3 bg-background-dark border border-border-dark rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary"
+              class="kemet-input w-full"
               required
             />
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-slate-300 mb-2">Description</label>
+            <label class="block text-sm font-medium text-white/80 mb-2">Description</label>
             <textarea
               v-model="newUpdate.description"
               rows="4"
               placeholder="Describe what's new in this update..."
-              class="w-full px-4 py-3 bg-background-dark border border-border-dark rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+              class="kemet-input w-full resize-none"
               required
             ></textarea>
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-slate-300 mb-2">Firmware File</label>
+            <label class="block text-sm font-medium text-white/80 mb-2">Firmware File</label>
             <div class="relative">
               <input
                 @change="handleFileChange"
                 type="file"
                 accept=".bin,.hex,.fw"
-                class="w-full px-4 py-3 bg-background-dark border border-border-dark rounded-lg text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary file:text-white file:cursor-pointer hover:file:bg-primary/80"
+                class="kemet-input w-full file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-kemet-primary file:text-gray-900 dark:text-white transition-colors file:cursor-pointer hover:file:bg-kemet-primary/80"
                 required
               />
             </div>
-            <p class="text-xs text-slate-500 mt-2">Accepted formats: .bin, .hex, .fw</p>
+            <p class="text-xs text-white/50 mt-2">Accepted formats: .bin, .hex, .fw</p>
           </div>
 
           <div class="flex gap-4">
             <button
               type="submit"
               :disabled="isUploading"
-              class="flex-1 px-6 py-3 bg-primary hover:bg-primary/80 disabled:bg-primary/50 text-white rounded-lg font-medium transition-all flex items-center justify-center gap-2"
+              class="kemet-btn flex-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               <span v-if="!isUploading">Deploy Update</span>
               <span v-else class="flex items-center gap-2">
@@ -279,7 +273,7 @@
             <button
               type="button"
               @click="showUploadModal = false"
-              class="px-6 py-3 bg-background-dark hover:bg-charcoal-light text-slate-300 rounded-lg font-medium transition-all"
+              class="px-6 py-3 glass-effect hover:bg-white/10 text-white/70 rounded-lg font-medium transition-all"
             >
               Cancel
             </button>

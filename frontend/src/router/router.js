@@ -20,6 +20,7 @@ const router = createRouter({
     },
     {
       path: "/super-admin",
+      component: () => import("../components/layout/SuperAdminLayout.vue"),
       children: [
         {
           path: "",
@@ -30,6 +31,11 @@ const router = createRouter({
           path: "admins",
           name: "manage-admins",
           component: Admins,
+        },
+        {
+          path: "logs",
+          name: "system-logs",
+          component: () => import("../views/super-admin/Logs.vue"),
         }
       ],
     },
