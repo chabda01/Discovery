@@ -287,6 +287,7 @@
 <script>
 import vehicleService from '../../services/vehicleService';
 import fotaService from '../../services/fotaService';
+import { WS_URL } from '../../config/env.js';
 
 export default {
   name: 'FotaView',
@@ -316,7 +317,7 @@ export default {
   },
 
   mounted() {
-    vehicleService.connect('ws://localhost:8080');
+    vehicleService.connect(WS_URL);
 
     this.unsubscribe = vehicleService.subscribe((vehicles) => {
       this.vehicles = vehicles;

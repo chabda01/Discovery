@@ -57,6 +57,7 @@ import ThemeToggle from "../ThemeToggle.vue";
 import AnimatedBackground from "../AnimatedBackground.vue";
 import Chatbot from "../Chatbot.vue";
 import vehicleService from "../../services/vehicleService.js";
+import { WS_URL } from "../../config/env.js";
 
 const vehicles = ref([]);
 const sidebarOpen = ref(false);
@@ -81,7 +82,7 @@ const userData = {
 };
 
 onMounted(() => {
-  vehicleService.connect("ws://localhost:8080");
+  vehicleService.connect(WS_URL);
   
   // Get initial vehicles
   vehicles.value = vehicleService.getVehicles();

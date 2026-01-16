@@ -176,6 +176,7 @@
 <script>
 import vehicleService from '../../services/vehicleService';
 import LiveMap from '../../components/LiveMap.vue';
+import { WS_URL } from '../../config/env.js';
 
 export default {
   name: 'FleetDetail',
@@ -194,7 +195,7 @@ export default {
   mounted() {
     const vehicleId = parseInt(this.$route.params.id);
 
-    vehicleService.connect('ws://localhost:8080');
+    vehicleService.connect(WS_URL);
 
     this.unsubscribe = vehicleService.subscribe((vehicles) => {
       this.vehicle = vehicles.find(v => v.id === vehicleId);

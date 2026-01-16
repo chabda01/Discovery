@@ -1,3 +1,5 @@
+import { WS_URL } from '../config/env.js';
+
 class VehicleService {
   constructor() {
     this.ws = null;
@@ -5,7 +7,7 @@ class VehicleService {
     this.listeners = new Set();
   }
 
-  connect(simulatorUrl = 'ws://localhost:8080') {
+  connect(simulatorUrl = WS_URL) {
     if (this.ws) {
       console.log('WebSocket already connected');
       return;

@@ -409,6 +409,7 @@ import LiveMap from "../../components/LiveMap.vue";
 import Vehicle3DViewer from "../../components/Vehicle3DViewer.vue";
 import vehicleService from "../../services/vehicleService";
 import vehicleImage from "../../assets/RENDER-4-scaled.png";
+import { WS_URL } from "../../config/env.js";
 
 export default {
   name: "ClientDashboard",
@@ -471,7 +472,7 @@ export default {
       this.allFeatures = module.default.getFeatures();
     });
 
-    vehicleService.connect("ws://localhost:8080");
+    vehicleService.connect(WS_URL);
 
     this.unsubscribe = vehicleService.subscribe((vehicles) => {
       this.vehicles = vehicles;

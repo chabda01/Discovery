@@ -63,6 +63,7 @@
 <script>
 import vehicleService from "../../services/vehicleService";
 import LiveMap from "../../components/LiveMap.vue";
+import { WS_URL } from "../../config/env.js";
 
 export default {
   name: "AdminDashboard",
@@ -87,7 +88,7 @@ export default {
 
   mounted() {
     // Se connecter au service de véhicules
-    vehicleService.connect("ws://localhost:8080");
+    vehicleService.connect(WS_URL);
     this.isConnected = true;
 
     // S'abonner aux mises à jour

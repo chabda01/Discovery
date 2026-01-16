@@ -231,6 +231,7 @@
 import featureService from '../../services/featureService';
 import momoService from '../../services/momoService';
 import vehicleService from '../../services/vehicleService';
+import { WS_URL } from '../../config/env.js';
 
 export default {
   name: 'ClientFeatures',
@@ -261,7 +262,7 @@ export default {
   mounted() {
     this.loadData();
     
-    vehicleService.connect('ws://localhost:8080');
+    vehicleService.connect(WS_URL);
 
     this.unsubscribe = vehicleService.subscribe((vehicles) => {
       this.vehicles = vehicles;

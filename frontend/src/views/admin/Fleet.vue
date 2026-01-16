@@ -137,6 +137,7 @@
 
 <script>
 import vehicleService from '../../services/vehicleService';
+import { WS_URL } from '../../config/env.js';
 
 export default {
   name: 'FleetView',
@@ -184,7 +185,7 @@ export default {
   },
 
   mounted() {
-    vehicleService.connect('ws://localhost:8080');
+    vehicleService.connect(WS_URL);
     this.isConnected = true;
 
     this.unsubscribe = vehicleService.subscribe((vehicles) => {

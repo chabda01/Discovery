@@ -70,6 +70,7 @@ import Footer from "./Footer.vue";
 import AnimatedBackground from "../AnimatedBackground.vue";
 
 import vehicleService from "../../services/vehicleService.js";
+import { WS_URL } from "../../config/env.js";
 
 const route = useRoute();
 const isConnected = ref(false);
@@ -84,7 +85,7 @@ const pageTitle = computed(() => {
 });
 
 // Connexion WS globale (1 seule fois)
-vehicleService.connect("ws://localhost:8080");
+vehicleService.connect(WS_URL);
 isConnected.value = true;
 
 // si tu veux vraiment fermer quand l’app se démonte :
