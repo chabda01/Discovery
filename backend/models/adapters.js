@@ -55,10 +55,10 @@ class DatabaseAdapter {
       );
       return await this.db.collection('vehicles').findOne({ _id: parseInt(id) });
     } else {
-      const fields = Object.keys(data).map(k => ${k} = ?).join(', ');
+      const fields = Object.keys(data).map(k => `${k} = ?`).join(', ');
       const values = [...Object.values(data), id];
       await this.db.run(
-        UPDATE vehicles SET ${fields}, last_seen = CURRENT_TIMESTAMP WHERE id = ?,
+        `UPDATE vehicles SET ${fields}, last_seen = CURRENT_TIMESTAMP WHERE id = ?`,
         values
       );
       return await this.db.get('SELECT * FROM vehicles WHERE id = ?', [id]);
@@ -112,7 +112,7 @@ class DatabaseAdapter {
       return await this.db.collection('updates').findOne({ _id: result.insertedId });
     } else {
       await this.db.run(
-        INSERT INTO updates (vehicle_id, firmware_id, status, progress) VALUES (?, ?, 'pending', 0),
+        `INSERT INTO updates (vehicle_id, firmware_id, status, progress) VALUES (?, ?, 'pending', 0)`,
         [vehicle_id, firmware_id]
       );
       return await this.db.get('SELECT * FROM updates WHERE id = last_insert_rowid()');
@@ -127,7 +127,7 @@ class DatabaseAdapter {
       );
     } else {
       await this.db.run(
-        UPDATE updates SET progress = ?, status = 'in_progress' WHERE id = ?,
+        `UPDATE updates SET progress = ?, status = 'in_progress' WHERE id = ?`,
         [progress, update_id]
       );
     }
@@ -148,7 +148,7 @@ class DatabaseAdapter {
       );
     } else {
       await this.db.run(
-        UPDATE updates SET status = ?, progress = ?, completed_at = CURRENT_TIMESTAMP, error_message = ? WHERE id = ?,
+        `UPDATE updates SET status = ?, progress = ?, completed_at = CURRENT_TIMESTAMP, error_message = ? WHERE id = ?`,
         [success ? 'completed' : 'failed', success ? 100 : 0, error, update_id]
       );
     }

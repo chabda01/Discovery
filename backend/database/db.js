@@ -150,7 +150,7 @@ class SQLiteDatabase {
     // Admin par défaut
     const passwordHash = await bcrypt.hash(config.DEFAULT_ADMIN_PASSWORD, 10);
     await this.db.runAsync(
-      INSERT OR IGNORE INTO users (username, password_hash, email) VALUES (?, ?, ?),
+      `INSERT OR IGNORE INTO users (username, password_hash, email) VALUES (?, ?, ?)`,
       [config.DEFAULT_ADMIN_USERNAME, passwordHash, config.DEFAULT_ADMIN_EMAIL]
     );
 
@@ -409,7 +409,7 @@ class MariaDatabase {
     // Admin
     const passwordHash = await bcrypt.hash(config.DEFAULT_ADMIN_PASSWORD, 10);
     await conn.query(
-      INSERT IGNORE INTO users (username, password_hash, email) VALUES (?, ?, ?),
+      `INSERT IGNORE INTO users (username, password_hash, email) VALUES (?, ?, ?)`,
       [config.DEFAULT_ADMIN_USERNAME, passwordHash, config.DEFAULT_ADMIN_EMAIL]
     );
 
