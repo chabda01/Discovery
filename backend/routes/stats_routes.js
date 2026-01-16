@@ -1,4 +1,6 @@
-
+const express = require('express');
+const { authenticateToken } = require('../middleware/auth');
+const DatabaseAdapter = require('../models/adapters');
 
 function createStatsRoutes(db) {
   const router = express.Router();
@@ -17,3 +19,5 @@ function createStatsRoutes(db) {
 
   return router;
 }
+
+module.exports = createStatsRoutes;

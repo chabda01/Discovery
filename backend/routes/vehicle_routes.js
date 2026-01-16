@@ -2,6 +2,11 @@
 // FICHIER: routes/vehicle.routes.js
 // ============================================
 
+const express = require('express');
+const { schemas, validate } = require('../models/models');
+const { authenticateToken } = require('../middleware/auth');
+const DatabaseAdapter = require('../models/adapters');
+
 function createVehicleRoutes(db) {
   const router = express.Router();
   const adapter = new DatabaseAdapter(db);
@@ -64,3 +69,5 @@ function createVehicleRoutes(db) {
 
   return router;
 }
+
+module.exports = createVehicleRoutes;
