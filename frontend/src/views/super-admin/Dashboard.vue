@@ -1,25 +1,25 @@
 <template>
-  <div class="space-y-4 sm:space-y-6 lg:space-y-8 p-4 sm:p-6 lg:p-8">
+  <div class="space-y-4 sm:space-y-6 lg:space-y-8 p-3 sm:p-4 lg:p-6 xl:p-8">
     <!-- Header Section -->
-    <header class="glass-topbar flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 px-4 sm:px-6 lg:px-8 py-4 rounded-2xl">
-        <div>
-        <h2 class="text-gray-900 dark:text-white text-2xl sm:text-3xl lg:text-4xl font-black tracking-[-0.03em] leading-tight transition-colors">User & Admin Management</h2>
-        <p class="text-gray-600 dark:text-slate-400 mt-1 max-w-xl text-sm sm:text-base transition-colors">Provision access levels, monitor authentication cycles, and manage the platform's hierarchical governance.</p>
+    <header class="glass-topbar flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 lg:gap-6 px-3 sm:px-4 lg:px-6 xl:px-8 py-3 sm:py-4 rounded-2xl">
+        <div class="flex-1 min-w-0">
+        <h2 class="text-gray-900 dark:text-white text-xl sm:text-2xl lg:text-3xl xl:text-4xl font-black tracking-[-0.03em] leading-tight transition-colors break-words">User & Admin Management</h2>
+        <p class="text-gray-600 dark:text-slate-400 mt-1 max-w-xl text-xs sm:text-sm lg:text-base transition-colors break-words">Provision access levels, monitor authentication cycles, and manage the platform's hierarchical governance.</p>
       </div>
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2 sm:gap-4 flex-shrink-0">
         <ThemeToggle />
       </div>
       </header>
 
       <!-- Control Bar -->
-    <div class="glass-card flex flex-col gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl">
+    <div class="glass-card flex flex-col gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl w-full overflow-hidden">
         <!-- Search -->
-        <div class="w-full">
+        <div class="w-full min-w-0">
           <div class="relative group">
-          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 group-focus-within:text-kemet-primary transition-colors">search</span>
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-slate-400 group-focus-within:text-kemet-primary transition-colors pointer-events-none">search</span>
             <input 
               v-model="searchQuery"
-            class="kemet-input w-full pl-10"
+            class="kemet-input w-full pl-10 pr-3 min-w-0"
               placeholder="Filter by identity or email..." 
               type="text"
             />
@@ -27,43 +27,43 @@
         </div>
 
         <!-- Filters Row -->
-        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full">
           <!-- Filters -->
-          <div class="flex items-center gap-2 glass-effect p-1 rounded-lg overflow-x-auto flex-1">
+          <div class="flex items-center gap-1.5 sm:gap-2 glass-effect p-1 rounded-lg overflow-x-auto flex-1 min-w-0">
             <button 
               @click="selectedRole = 'all'"
             :class="selectedRole === 'all' ? 'glass-effect-primary text-kemet-primary dark:text-white' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200/50 dark:hover:bg-white/10'"
-            class="px-3 sm:px-4 py-1.5 text-xs font-bold rounded transition-all whitespace-nowrap"
+            class="px-2.5 sm:px-3 lg:px-4 py-1.5 text-[10px] sm:text-xs font-bold rounded transition-all whitespace-nowrap flex-shrink-0"
             >
               All Roles
             </button>
             <button 
               @click="selectedRole = 'admin'"
             :class="selectedRole === 'admin' ? 'glass-effect-primary text-kemet-primary dark:text-white' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200/50 dark:hover:bg-white/10'"
-            class="px-3 sm:px-4 py-1.5 text-xs font-bold rounded transition-all whitespace-nowrap"
+            class="px-2.5 sm:px-3 lg:px-4 py-1.5 text-[10px] sm:text-xs font-bold rounded transition-all whitespace-nowrap flex-shrink-0"
             >
               Admin
             </button>
             <button 
               @click="selectedRole = 'operator'"
             :class="selectedRole === 'operator' ? 'glass-effect-primary text-kemet-primary dark:text-white' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200/50 dark:hover:bg-white/10'"
-            class="px-3 sm:px-4 py-1.5 text-xs font-bold rounded transition-all whitespace-nowrap"
+            class="px-2.5 sm:px-3 lg:px-4 py-1.5 text-[10px] sm:text-xs font-bold rounded transition-all whitespace-nowrap flex-shrink-0"
             >
               Operator
             </button>
             <button 
               @click="selectedRole = 'viewer'"
             :class="selectedRole === 'viewer' ? 'glass-effect-primary text-kemet-primary dark:text-white' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-200/50 dark:hover:bg-white/10'"
-            class="px-3 sm:px-4 py-1.5 text-xs font-bold rounded transition-all whitespace-nowrap"
+            class="px-2.5 sm:px-3 lg:px-4 py-1.5 text-[10px] sm:text-xs font-bold rounded transition-all whitespace-nowrap flex-shrink-0"
             >
               Viewer
             </button>
           </div>
 
-          <div class="hidden sm:block h-8 w-[1px] bg-gray-300 dark:bg-gray-700"></div>
+          <div class="hidden sm:block h-8 w-[1px] bg-gray-300 dark:bg-gray-700 flex-shrink-0"></div>
           
-          <button class="flex items-center justify-center gap-2 px-3 sm:px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors whitespace-nowrap">
-            <span class="material-symbols-outlined text-sm">filter_list</span>
+          <button class="flex items-center justify-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 lg:px-4 py-2 text-[10px] sm:text-xs font-bold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors whitespace-nowrap flex-shrink-0">
+            <span class="material-symbols-outlined text-xs sm:text-sm">filter_list</span>
             <span class="hidden sm:inline">Advanced Filters</span>
             <span class="sm:hidden">Filters</span>
           </button>
@@ -71,55 +71,55 @@
       </div>
 
       <!-- Data Grid - Desktop -->
-    <div class="glass-card rounded-xl overflow-hidden hidden lg:block">
+    <div class="glass-card rounded-xl overflow-hidden hidden lg:block w-full">
         <!-- Table Header -->
-      <div class="grid grid-cols-12 glass-topbar border-b border-gray-200 dark:border-gray-700">
-        <div class="col-span-3 px-6 py-4 text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400">User Name</div>
-        <div class="col-span-3 px-6 py-4 text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400">Email Architecture</div>
-        <div class="col-span-2 px-6 py-4 text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 text-center">Security Role</div>
-        <div class="col-span-3 px-6 py-4 text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400">System Heartbeat</div>
-        <div class="col-span-1 px-6 py-4 text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 text-right">Actions</div>
+      <div class="grid grid-cols-12 glass-topbar border-b border-gray-200 dark:border-gray-700 min-w-full">
+        <div class="col-span-3 px-3 xl:px-6 py-3 xl:py-4 text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 min-w-0">User Name</div>
+        <div class="col-span-3 px-3 xl:px-6 py-3 xl:py-4 text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 min-w-0">Email Architecture</div>
+        <div class="col-span-2 px-3 xl:px-6 py-3 xl:py-4 text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 text-center min-w-0">Security Role</div>
+        <div class="col-span-3 px-3 xl:px-6 py-3 xl:py-4 text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 min-w-0">System Heartbeat</div>
+        <div class="col-span-1 px-3 xl:px-6 py-3 xl:py-4 text-[10px] font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 text-right min-w-0">Actions</div>
         </div>
 
         <!-- Table Body -->
       <div class="divide-y divide-gray-200 dark:divide-gray-700">
           <div 
-            v-for="user in filteredUsers" 
+            v-for="user in paginatedUsers" 
             :key="user.id"
-          class="grid grid-cols-12 hover:bg-gray-100/50 dark:hover:bg-white/5 transition-colors items-center group glass-effect"
+          class="grid grid-cols-12 hover:bg-gray-100/50 dark:hover:bg-white/5 transition-colors items-center group glass-effect min-w-full"
           >
-            <div class="col-span-3 px-6 py-5 flex items-center gap-3">
+            <div class="col-span-3 px-3 xl:px-6 py-3 xl:py-5 flex items-center gap-2 xl:gap-3 min-w-0">
               <div 
                 :class="getRoleBadgeClass(user.role)"
-                class="h-9 w-9 rounded flex items-center justify-center border"
+                class="h-8 w-8 xl:h-9 xl:w-9 rounded flex items-center justify-center border flex-shrink-0"
               >
-                <span :class="getRoleTextClass(user.role)" class="font-bold">{{ user.initials }}</span>
+                <span :class="getRoleTextClass(user.role)" class="font-bold text-xs xl:text-sm">{{ user.initials }}</span>
               </div>
-            <span class="text-gray-900 dark:text-white font-semibold text-sm transition-colors">{{ user.name }}</span>
+            <span class="text-gray-900 dark:text-white font-semibold text-xs xl:text-sm transition-colors truncate min-w-0">{{ user.name }}</span>
             </div>
 
-            <div class="col-span-3 px-6 py-5">
-            <span class="text-gray-600 dark:text-gray-400 text-sm font-mono transition-colors">{{ user.email }}</span>
+            <div class="col-span-3 px-3 xl:px-6 py-3 xl:py-5 min-w-0">
+            <span class="text-gray-600 dark:text-gray-400 text-xs xl:text-sm font-mono transition-colors truncate block">{{ user.email }}</span>
             </div>
 
-            <div class="col-span-2 px-6 py-5 flex justify-center">
+            <div class="col-span-2 px-3 xl:px-6 py-3 xl:py-5 flex justify-center min-w-0">
               <span 
                 :class="getRolePillClass(user.role)"
-              class="kemet-badge inline-flex items-center px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-tighter"
+              class="kemet-badge inline-flex items-center px-2 xl:px-2.5 py-0.5 rounded text-[9px] xl:text-[10px] font-bold uppercase tracking-tighter whitespace-nowrap"
               >
                 {{ user.role }}
               </span>
             </div>
 
-            <div class="col-span-3 px-6 py-5">
+            <div class="col-span-3 px-3 xl:px-6 py-3 xl:py-5 min-w-0">
               <div class="flex flex-col">
-              <span class="text-gray-700 dark:text-gray-300 text-sm transition-colors">{{ user.lastLogin.date }}</span>
-              <span class="text-gray-500 dark:text-gray-500 text-[10px] font-mono transition-colors">{{ user.lastLogin.time }}</span>
+              <span class="text-gray-700 dark:text-gray-300 text-xs xl:text-sm transition-colors truncate">{{ user.lastLogin.date }}</span>
+              <span class="text-gray-500 dark:text-gray-500 text-[9px] xl:text-[10px] font-mono transition-colors truncate">{{ user.lastLogin.time }}</span>
               </div>
             </div>
 
-            <div class="col-span-1 px-6 py-5 text-right">
-            <button class="material-symbols-outlined text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer">
+            <div class="col-span-1 px-3 xl:px-6 py-3 xl:py-5 text-right min-w-0">
+            <button class="material-symbols-outlined text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer text-base xl:text-lg">
                 settings_ethernet
               </button>
             </div>
@@ -127,125 +127,127 @@
         </div>
 
         <!-- Pagination -->
-      <div class="glass-topbar px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-gray-200 dark:border-gray-700">
-        <span class="text-xs text-gray-600 dark:text-gray-400 transition-colors text-center sm:text-left">
+      <div class="glass-topbar px-3 sm:px-4 lg:px-6 py-3 sm:py-4 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 border-t border-gray-200 dark:border-gray-700">
+        <span class="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 transition-colors text-center sm:text-left break-words">
           Displaying <span class="text-gray-900 dark:text-white font-bold transition-colors">{{ currentPageStart }}-{{ currentPageEnd }}</span> of 
-          <span class="text-gray-900 dark:text-white font-bold transition-colors">{{ totalUsers }}</span> identities in system
+          <span class="text-gray-900 dark:text-white font-bold transition-colors">{{ totalUsers }}</span> identities
           </span>
-          <div class="flex gap-2">
+          <div class="flex gap-1.5 sm:gap-2 flex-wrap justify-center">
             <button 
               @click="prevPage"
               :disabled="currentPage === 1"
-            class="h-8 w-8 flex items-center justify-center rounded glass-effect hover:bg-gray-200/50 dark:hover:bg-white/10 disabled:opacity-30 transition-all"
+            class="h-7 sm:h-8 w-7 sm:w-8 flex items-center justify-center rounded glass-effect hover:bg-gray-200/50 dark:hover:bg-white/10 disabled:opacity-30 transition-all flex-shrink-0"
             >
-              <span class="material-symbols-outlined text-sm">chevron_left</span>
+              <span class="material-symbols-outlined text-xs sm:text-sm">chevron_left</span>
             </button>
             <button 
               v-for="page in visiblePages" 
               :key="page"
               @click="currentPage = page"
             :class="currentPage === page ? 'glass-effect-primary text-kemet-primary dark:text-white' : 'glass-effect text-gray-600 dark:text-gray-400 hover:bg-gray-200/50 dark:hover:bg-white/10'"
-            class="h-8 px-3 flex items-center justify-center rounded text-xs font-bold transition-all"
+            class="h-7 sm:h-8 px-2 sm:px-3 flex items-center justify-center rounded text-[10px] sm:text-xs font-bold transition-all flex-shrink-0"
             >
               {{ page }}
             </button>
             <button 
               @click="nextPage"
               :disabled="currentPage === totalPages"
-            class="h-8 w-8 flex items-center justify-center rounded glass-effect hover:bg-gray-200/50 dark:hover:bg-white/10 disabled:opacity-30 transition-all"
+            class="h-7 sm:h-8 w-7 sm:w-8 flex items-center justify-center rounded glass-effect hover:bg-gray-200/50 dark:hover:bg-white/10 disabled:opacity-30 transition-all flex-shrink-0"
             >
-              <span class="material-symbols-outlined text-sm">chevron_right</span>
+              <span class="material-symbols-outlined text-xs sm:text-sm">chevron_right</span>
             </button>
           </div>
         </div>
       </div>
 
       <!-- Data Grid - Mobile Cards -->
-      <div class="lg:hidden space-y-4">
+      <div class="lg:hidden space-y-3 sm:space-y-4 w-full">
         <div
           v-for="user in paginatedUsers"
           :key="user.id"
-          class="glass-card rounded-xl p-4 space-y-3"
+          class="glass-card rounded-xl p-3 sm:p-4 space-y-3 w-full overflow-hidden"
         >
-          <div class="flex items-center justify-between gap-2">
-            <div class="flex items-center gap-3 flex-1 min-w-0">
+          <div class="flex items-center justify-between gap-2 w-full">
+            <div class="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
               <div
                 :class="getRoleBadgeClass(user.role)"
-                class="h-10 w-10 rounded flex items-center justify-center border flex-shrink-0"
+                class="h-9 w-9 sm:h-10 sm:w-10 rounded flex items-center justify-center border flex-shrink-0"
               >
-                <span :class="getRoleTextClass(user.role)" class="font-bold text-sm">{{ user.initials }}</span>
+                <span :class="getRoleTextClass(user.role)" class="font-bold text-xs sm:text-sm">{{ user.initials }}</span>
               </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-gray-900 dark:text-white font-semibold text-sm transition-colors truncate">{{ user.name }}</p>
-                <p class="text-xs text-gray-600 dark:text-gray-400 font-mono transition-colors truncate">{{ user.email }}</p>
+              <div class="flex-1 min-w-0 overflow-hidden">
+                <p class="text-gray-900 dark:text-white font-semibold text-xs sm:text-sm transition-colors truncate">{{ user.name }}</p>
+                <p class="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 font-mono transition-colors truncate">{{ user.email }}</p>
               </div>
             </div>
             <span
               :class="getRolePillClass(user.role)"
-              class="kemet-badge inline-flex items-center px-2 py-1 rounded text-[10px] font-bold uppercase flex-shrink-0"
+              class="kemet-badge inline-flex items-center px-1.5 sm:px-2 py-0.5 sm:py-1 rounded text-[9px] sm:text-[10px] font-bold uppercase flex-shrink-0"
             >
               {{ user.role }}
             </span>
           </div>
           <div class="pt-2 border-t border-gray-200 dark:border-gray-700 space-y-1">
-            <p class="text-xs text-gray-600 dark:text-slate-400 transition-colors">Last Login</p>
-            <p class="text-sm text-gray-700 dark:text-gray-300 transition-colors">{{ user.lastLogin.date }}</p>
-            <p class="text-xs text-gray-500 dark:text-gray-500 font-mono transition-colors">{{ user.lastLogin.time }}</p>
+            <p class="text-[10px] sm:text-xs text-gray-600 dark:text-slate-400 transition-colors">Last Login</p>
+            <p class="text-xs sm:text-sm text-gray-700 dark:text-gray-300 transition-colors truncate">{{ user.lastLogin.date }}</p>
+            <p class="text-[10px] sm:text-xs text-gray-500 dark:text-gray-500 font-mono transition-colors truncate">{{ user.lastLogin.time }}</p>
           </div>
         </div>
         
         <!-- Mobile Pagination -->
-        <div class="glass-card rounded-xl p-4 flex items-center justify-between">
+        <div class="glass-card rounded-xl p-3 sm:p-4 flex items-center justify-between gap-2 w-full">
           <button
             @click="prevPage"
             :disabled="currentPage === 1"
-            class="h-10 px-4 flex items-center justify-center rounded-lg glass-effect hover:bg-gray-200/50 dark:hover:bg-white/10 disabled:opacity-30 transition-all text-sm font-medium"
+            class="h-9 sm:h-10 px-3 sm:px-4 flex items-center justify-center rounded-lg glass-effect hover:bg-gray-200/50 dark:hover:bg-white/10 disabled:opacity-30 transition-all text-xs sm:text-sm font-medium flex-shrink-0"
           >
-            <span class="material-symbols-outlined text-sm mr-1">chevron_left</span>
-            Previous
+            <span class="material-symbols-outlined text-xs sm:text-sm mr-1">chevron_left</span>
+            <span class="hidden sm:inline">Previous</span>
+            <span class="sm:hidden">Prev</span>
           </button>
-          <span class="text-xs text-gray-600 dark:text-gray-400 transition-colors">
+          <span class="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 transition-colors text-center flex-1">
             Page {{ currentPage }} of {{ totalPages }}
           </span>
           <button
             @click="nextPage"
             :disabled="currentPage === totalPages"
-            class="h-10 px-4 flex items-center justify-center rounded-lg glass-effect hover:bg-gray-200/50 dark:hover:bg-white/10 disabled:opacity-30 transition-all text-sm font-medium"
+            class="h-9 sm:h-10 px-3 sm:px-4 flex items-center justify-center rounded-lg glass-effect hover:bg-gray-200/50 dark:hover:bg-white/10 disabled:opacity-30 transition-all text-xs sm:text-sm font-medium flex-shrink-0"
           >
-            Next
-            <span class="material-symbols-outlined text-sm ml-1">chevron_right</span>
+            <span class="hidden sm:inline">Next</span>
+            <span class="sm:hidden">Next</span>
+            <span class="material-symbols-outlined text-xs sm:text-sm ml-1">chevron_right</span>
           </button>
         </div>
       </div>
 
       <!-- System Status Summary -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
-      <div class="glass-card p-5 rounded-lg">
-        <p class="text-[10px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-bold mb-1 transition-colors">Total Privileged Nodes</p>
-          <div class="flex items-end justify-between">
-          <span class="text-2xl font-black text-gray-900 dark:text-white transition-colors">42</span>
-          <span class="text-[10px] text-green-500 font-bold">+2 this week</span>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 w-full">
+      <div class="glass-card p-3 sm:p-4 lg:p-5 rounded-lg min-w-0 overflow-hidden">
+        <p class="text-[9px] sm:text-[10px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-bold mb-1 sm:mb-2 transition-colors break-words">Total Privileged Nodes</p>
+          <div class="flex items-end justify-between gap-1">
+          <span class="text-xl sm:text-2xl font-black text-gray-900 dark:text-white transition-colors flex-shrink-0">42</span>
+          <span class="text-[9px] sm:text-[10px] text-green-500 font-bold flex-shrink-0">+2 this week</span>
         </div>
       </div>
-      <div class="glass-card p-5 rounded-lg">
-        <p class="text-[10px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-bold mb-1 transition-colors">Active Sessions</p>
-          <div class="flex items-end justify-between">
-          <span class="text-2xl font-black text-gray-900 dark:text-white transition-colors">12</span>
-          <div class="h-2 w-2 rounded-full bg-green-500 animate-pulse mb-2"></div>
+      <div class="glass-card p-3 sm:p-4 lg:p-5 rounded-lg min-w-0 overflow-hidden">
+        <p class="text-[9px] sm:text-[10px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-bold mb-1 sm:mb-2 transition-colors break-words">Active Sessions</p>
+          <div class="flex items-end justify-between gap-1">
+          <span class="text-xl sm:text-2xl font-black text-gray-900 dark:text-white transition-colors flex-shrink-0">12</span>
+          <div class="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-green-500 animate-pulse mb-1 sm:mb-2 flex-shrink-0"></div>
         </div>
       </div>
-      <div class="glass-card p-5 rounded-lg">
-        <p class="text-[10px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-bold mb-1 transition-colors">Failed Auth attempts</p>
-          <div class="flex items-end justify-between">
-          <span class="text-2xl font-black text-gray-900 dark:text-white transition-colors">0</span>
-          <span class="text-[10px] text-gray-500 dark:text-gray-400 font-bold transition-colors">All clear</span>
+      <div class="glass-card p-3 sm:p-4 lg:p-5 rounded-lg min-w-0 overflow-hidden">
+        <p class="text-[9px] sm:text-[10px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-bold mb-1 sm:mb-2 transition-colors break-words">Failed Auth attempts</p>
+          <div class="flex items-end justify-between gap-1">
+          <span class="text-xl sm:text-2xl font-black text-gray-900 dark:text-white transition-colors flex-shrink-0">0</span>
+          <span class="text-[9px] sm:text-[10px] text-gray-500 dark:text-gray-400 font-bold transition-colors flex-shrink-0">All clear</span>
         </div>
       </div>
-      <div class="glass-card p-5 rounded-lg">
-        <p class="text-[10px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-bold mb-1 transition-colors">Database Sync</p>
-          <div class="flex items-end justify-between">
-          <span class="text-2xl font-black text-gray-900 dark:text-white transition-colors">99.9%</span>
-          <span class="material-symbols-outlined text-kemet-primary text-xl">sync_saved_locally</span>
+      <div class="glass-card p-3 sm:p-4 lg:p-5 rounded-lg min-w-0 overflow-hidden">
+        <p class="text-[9px] sm:text-[10px] uppercase tracking-widest text-gray-500 dark:text-gray-400 font-bold mb-1 sm:mb-2 transition-colors break-words">Database Sync</p>
+          <div class="flex items-end justify-between gap-1">
+          <span class="text-xl sm:text-2xl font-black text-gray-900 dark:text-white transition-colors flex-shrink-0">99.9%</span>
+          <span class="material-symbols-outlined text-kemet-primary text-base sm:text-lg lg:text-xl flex-shrink-0">sync_saved_locally</span>
         </div>
       </div>
     </div>
