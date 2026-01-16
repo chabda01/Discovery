@@ -111,7 +111,7 @@ function handleLogout() {
   sessionStorage.removeItem("authToken");
   
   // Redirect to login page
-  router.push("/login");
+  router.push("/");
 }
 </script>
 
